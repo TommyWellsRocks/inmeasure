@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import Script from "next/script";
+import { HeaderNav } from "~/components/layout/HeaderNav";
 
 export const metadata: Metadata = {
   title: "InMeasure Analytics",
@@ -21,14 +22,15 @@ const InMeasureScript = `(function (fine, illTellYou, doYou, know, the, muffin, 
 		man = illTellYou.getElementsByTagName(know)[0];
 		man.parentNode.insertBefore(muffin, man);
 	}
-})(window, document, "http://0.0.0.0:8081", "script", "test123456789");`;
+})(window, document, "http://localhost:3000/api/v1", "script", "test123456789");`;
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="bg-black text-white">
+      <body className="bg-zinc-950 text-white">
+        <HeaderNav />
         {children}
 
         <Script
