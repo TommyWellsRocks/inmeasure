@@ -1,14 +1,14 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, bigint } from "drizzle-orm/pg-core";
-import { browserEntries, clients, heartbeatEntries } from "~/server/db/schema";
+import { clients, connectionEntries } from "~/server/db/schema";
 
 export const tabVisibilityEntries = createTable(
   "tab_visibility_entries",
   {
     id: serial("id").primaryKey(),
     connectionId: varchar("connection_id").references(
-      () => heartbeatEntries.connectionId,
+      () => connectionEntries.connectionId,
       {
         onDelete: "cascade",
       },
@@ -28,9 +28,9 @@ export const tabVisibilityEntries = createTable(
 export const tabVisibilityRelations = relations(
   tabVisibilityEntries,
   ({ one }) => ({
-    connection: one(browserEntries, {
+    connection: one(connectionEntries, {
       fields: [tabVisibilityEntries.connectionId],
-      references: [browserEntries.connectionId],
+      references: [connectionEntries.connectionId],
     }),
   }),
 );

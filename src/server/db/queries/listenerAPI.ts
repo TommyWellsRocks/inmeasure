@@ -15,6 +15,7 @@ import {
   resourceEntries,
   scrollEventEntries,
   tabVisibilityEntries,
+  connectionEntries,
 } from "../schema";
 
 import type {
@@ -55,12 +56,12 @@ export async function authorizeAndWriteMessage(
           eq(model.apiKey, apiKey),
           exists(
             dbPen
-              .select({ id: heartbeatEntries.id })
-              .from(heartbeatEntries)
+              .select({ connectionId: connectionEntries.connectionId })
+              .from(connectionEntries)
               .where(
                 and(
-                  eq(heartbeatEntries.clientId, model.id),
-                  eq(heartbeatEntries.connectionId, connectionId),
+                  eq(connectionEntries.clientId, model.id),
+                  eq(connectionEntries.connectionId, connectionId),
                 ),
               ),
           ),

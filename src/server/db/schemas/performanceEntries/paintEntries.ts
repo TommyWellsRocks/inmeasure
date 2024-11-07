@@ -1,14 +1,14 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, numeric } from "drizzle-orm/pg-core";
-import { browserEntries, clients, heartbeatEntries } from "~/server/db/schema";
+import { clients, connectionEntries } from "~/server/db/schema";
 
 export const paintEntries = createTable(
   "paint_entries",
   {
     id: serial("id").primaryKey(),
     connectionId: varchar("connection_id").references(
-      () => heartbeatEntries.connectionId,
+      () => connectionEntries.connectionId,
       {
         onDelete: "cascade",
       },
@@ -27,8 +27,8 @@ export const paintEntries = createTable(
 );
 
 export const paintRelations = relations(paintEntries, ({ one }) => ({
-  connection: one(browserEntries, {
+  connection: one(connectionEntries, {
     fields: [paintEntries.connectionId],
-    references: [browserEntries.connectionId],
+    references: [connectionEntries.connectionId],
   }),
 }));

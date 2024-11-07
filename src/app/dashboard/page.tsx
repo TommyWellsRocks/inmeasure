@@ -1,13 +1,26 @@
-import { getSourcesAndPagesCount } from "~/server/db/queries/dashboard";
+import {
+  getSourcesAndPagesCount,
+  getUserClients,
+} from "~/server/db/queries/dashboard";
 
 import Link from "next/link";
 import { BiTable } from "~/components/dashboard/BiTable";
-
-const clientId = "920a1900-c001-4a3d-b830-eac6d9d683b2";
-const clientName = "localhost";
-const site = "http://localhost:3000";
+import { auth } from "~/server/auth";
+import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId)
+    return redirect(`/signin?return=${encodeURIComponent("/dashboard")}`);
+
+  const myCompanies = await getUserClients(userId);
+  const client = myCompanies.at(0)?.client;
+  const clientId = client?.id;
+  const clientName = client?.companyName;
+  const clientDomain = "http://" + client?.domain + ":3000";
+
+  if (!clientId) return;
   const { pageVisitors, sourcesVisitors } =
     await getSourcesAndPagesCount(clientId);
 
@@ -28,8 +41,11 @@ export default async function Dashboard() {
     <main className="flex flex-col gap-y-20 px-10">
       <section className="flex flex-col gap-y-2">
         <span className="text-xl font-semibold">{clientName}</span>
-        <Link href={site} className="text-sm underline underline-offset-1">
-          {site}
+        <Link
+          href={clientDomain}
+          className="text-sm underline underline-offset-1"
+        >
+          {clientDomain}
         </Link>
       </section>
 

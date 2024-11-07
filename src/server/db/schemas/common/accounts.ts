@@ -1,6 +1,7 @@
 import { createTable } from "../helper";
 import { relations } from "drizzle-orm";
 import { index, varchar, text, integer, primaryKey } from "drizzle-orm/pg-core";
+import { AdapterAccountType } from "next-auth/adapters";
 import { users } from "~/server/db/schema";
 
 export const accounts = createTable(
@@ -10,6 +11,7 @@ export const accounts = createTable(
       .notNull()
       .references(() => users.id),
     provider: varchar("provider", { length: 255 }).notNull(),
+    type: text("type").$type<AdapterAccountType>().notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),

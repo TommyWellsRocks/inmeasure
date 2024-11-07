@@ -1,14 +1,14 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, bigint, integer } from "drizzle-orm/pg-core";
-import { browserEntries, clients, heartbeatEntries } from "~/server/db/schema";
+import { clients, connectionEntries } from "~/server/db/schema";
 
 export const clickEventEntries = createTable(
   "click_event_entries",
   {
     id: serial("id").primaryKey(),
     connectionId: varchar("connection_id").references(
-      () => heartbeatEntries.connectionId,
+      () => connectionEntries.connectionId,
       {
         onDelete: "cascade",
       },
@@ -29,8 +29,8 @@ export const clickEventEntries = createTable(
 );
 
 export const clickEventRelations = relations(clickEventEntries, ({ one }) => ({
-  connection: one(browserEntries, {
+  connection: one(connectionEntries, {
     fields: [clickEventEntries.connectionId],
-    references: [browserEntries.connectionId],
+    references: [connectionEntries.connectionId],
   }),
 }));

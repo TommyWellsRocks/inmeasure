@@ -23,13 +23,22 @@ export {
 } from "~/server/db/schemas/common/sessions";
 export { verificationTokens } from "~/server/db/schemas/common/verificationTokens";
 
+// Business
 export {
   clients,
   clientRelations,
   tierEnum,
-} from "~/server/db/schemas/clients";
+} from "~/server/db/schemas/business/clients";
+export {
+  clientUsers,
+  clientUserRelations,
+} from "~/server/db/schemas/business/clientUsers";
 
 // General Entries
+export {
+  connectionEntries,
+  connectionRelations,
+} from "~/server/db/schemas/generalEntries/connectionEntries";
 export {
   browserEntries,
   browserEntryRelations,

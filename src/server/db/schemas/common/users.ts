@@ -1,7 +1,7 @@
 import { createTable } from "../helper";
 import { relations, sql } from "drizzle-orm";
-import { boolean, index, timestamp, varchar } from "drizzle-orm/pg-core";
-import { accounts, clients } from "~/server/db/schema";
+import { index, timestamp, varchar } from "drizzle-orm/pg-core";
+import { accounts } from "~/server/db/schema";
 
 export const users = createTable(
   "user",
@@ -17,11 +17,6 @@ export const users = createTable(
       withTimezone: true,
     }).default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: 255 }),
-    redirectOnLoadWorkout: boolean("redirect_on_load_workout")
-      .notNull()
-      .default(true),
-    lastWorkoutRedirect: timestamp("last_workout_redirect"),
-    weightInPounds: boolean("weight_in_pounds").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -34,7 +29,6 @@ export const users = createTable(
   }),
 );
 
-export const usersRelations = relations(users, ({ one, many }) => ({
-  client: one(clients, { fields: [users.id], references: [clients.userId] }),
+export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));

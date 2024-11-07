@@ -1,14 +1,14 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, serial, integer, bigint, varchar } from "drizzle-orm/pg-core";
-import { browserEntries, clients, heartbeatEntries } from "~/server/db/schema";
+import { clients, connectionEntries } from "~/server/db/schema";
 
 export const mouseMoveEntries = createTable(
   "mouse_move_entries",
   {
     id: serial("id").primaryKey(),
     connectionId: varchar("connection_id").references(
-      () => heartbeatEntries.connectionId,
+      () => connectionEntries.connectionId,
       {
         onDelete: "cascade",
       },
@@ -27,8 +27,8 @@ export const mouseMoveEntries = createTable(
 );
 
 export const mouseMoveRelations = relations(mouseMoveEntries, ({ one }) => ({
-  connection: one(browserEntries, {
+  connection: one(connectionEntries, {
     fields: [mouseMoveEntries.connectionId],
-    references: [browserEntries.connectionId],
+    references: [connectionEntries.connectionId],
   }),
 }));

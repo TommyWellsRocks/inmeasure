@@ -8,14 +8,14 @@ import {
   boolean,
   varchar,
 } from "drizzle-orm/pg-core";
-import { browserEntries, clients, heartbeatEntries } from "~/server/db/schema";
+import { clients, connectionEntries } from "~/server/db/schema";
 
 export const layoutShiftEntries = createTable(
   "layout_shift_entries",
   {
     id: serial("id").primaryKey(),
     connectionId: varchar("connection_id").references(
-      () => heartbeatEntries.connectionId,
+      () => connectionEntries.connectionId,
       {
         onDelete: "cascade",
       },
@@ -54,9 +54,9 @@ export const layoutShiftEntries = createTable(
 export const layoutShiftRelations = relations(
   layoutShiftEntries,
   ({ one }) => ({
-    connection: one(browserEntries, {
+    connection: one(connectionEntries, {
       fields: [layoutShiftEntries.connectionId],
-      references: [browserEntries.connectionId],
+      references: [connectionEntries.connectionId],
     }),
   }),
 );
