@@ -2,7 +2,8 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import Script from "next/script";
+
+import { AppSidebar } from "~/components/layout/AppSidebar";
 import { HeaderNav } from "~/components/layout/HeaderNav";
 
 export const metadata: Metadata = {
@@ -29,17 +30,20 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="bg-zinc-950 text-white">
-        <HeaderNav />
-        {children}
+      <body className="flex bg-zinc-950 text-white h-screen">
+        <AppSidebar />
+        <main className="flex flex-col w-full">
+          <HeaderNav />
+          {children}
+        </main>
 
-        <Script
+        {/* <Script
           id="inmeasure-script"
           dangerouslySetInnerHTML={{
             __html: InMeasureScript,
           }}
           strategy="beforeInteractive"
-        />
+        /> */}
       </body>
     </html>
   );

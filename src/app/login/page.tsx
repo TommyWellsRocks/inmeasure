@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { signIn, auth } from "~/server/auth";
-import AuthError from "next-auth";
+import { auth } from "~/server/auth";
+import { LoginButton } from "~/components/layout/LoginButton";
 
 export const dynamic = "force-dynamic";
 
@@ -16,19 +16,7 @@ export default async function SignIn({
   return (
     <main className="flex h-screen flex-col items-center justify-center gap-5">
       <div className="text-3xl font-semibold">Sign In / Sign Up</div>
-      <form
-        action={async () => {
-          "use server";
-          try {
-            await signIn("google");
-          } catch (error) {
-            if (error instanceof AuthError) {
-              return redirect(`/?error=${error}`);
-            }
-            throw error;
-          }
-        }}
-      >
+      <LoginButton>
         <button
           className="flex gap-2 rounded-md border border-zinc-500 px-4 py-2 text-base"
           type="submit"
@@ -42,7 +30,7 @@ export default async function SignIn({
           />
           <span>Continue with Google</span>
         </button>
-      </form>
+      </LoginButton>
     </main>
   );
 }

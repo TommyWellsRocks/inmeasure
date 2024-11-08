@@ -15,7 +15,7 @@ export default async function Dashboard() {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId)
-    return redirect(`/signin?return=${encodeURIComponent("/dashboard")}`);
+    return redirect(`/login?return=${encodeURIComponent("/dashboard")}`);
 
   const myCompanies = await getUserClients(userId);
   const client = myCompanies.at(0)?.client;
