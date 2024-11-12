@@ -40,14 +40,14 @@ function CompanyOption({
   );
 }
 
-function CreateCompanyItem() {
+function AddCompanyItem() {
   return (
     <Link
-      href={"/create-client"}
+      href={"/add-company"}
       className="flex w-full items-center justify-between rounded-lg bg-zinc-800 p-2 hover:bg-zinc-950"
     >
       <div className="flex flex-col items-start">
-        <span className="text-sm font-medium">Create Company</span>
+        <span className="text-sm font-medium">Add Company</span>
       </div>
       <div className="rounded-lg bg-zinc-800 px-1 py-2">
         <Plus height={18} />
@@ -86,18 +86,18 @@ export function CompanyDropdown({ companies }: { companies: Company[] }) {
         <DropDown company={company} />
 
         <PopoverContent className="flex flex-col gap-y-1 border-none bg-zinc-700 p-2 text-zinc-100">
-          {companies.map((item) =>
+          {companies.map((item, i) =>
             item.id === company.id ? (
-              <SelectedCompany item={item} />
+              <SelectedCompany key={i} item={item} />
             ) : (
-              <CompanyOption company={item} setter={setCompany} />
+              <CompanyOption key={i} company={item} setter={setCompany} />
             ),
           )}
-          <CreateCompanyItem />
+          <AddCompanyItem />
         </PopoverContent>
       </PopoverTrigger>
     </Popover>
   ) : (
-    <CreateCompanyItem />
+    <AddCompanyItem />
   );
 }

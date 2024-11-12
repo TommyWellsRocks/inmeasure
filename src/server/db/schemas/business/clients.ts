@@ -14,8 +14,10 @@ export const clients = createTable(
       .$defaultFn(() => crypto.randomUUID()),
     tier: tierEnum("tier").default("bronze").notNull(),
     companyName: varchar("company_name").notNull(),
-    apiKey: varchar("apiKey").notNull(),
     domain: varchar("domain").notNull(),
+    apiKey: varchar("apiKey")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
   },
   (table) => ({
     idIndex: index().on(table.id),
