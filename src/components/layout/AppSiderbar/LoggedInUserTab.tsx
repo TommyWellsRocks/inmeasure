@@ -15,19 +15,19 @@ export function LoggedInUserTab({
   userImage: string | null | undefined;
   name: string | null | undefined;
   email: string | null | undefined;
-}) {
+  }) {
   return (
     <Popover>
       <PopoverTrigger>
-        <div className="group flex items-center justify-between gap-x-8 rounded-lg px-4 py-4 text-start hover:bg-zinc-800">
+        <div className="group flex items-center justify-between gap-x-4 rounded-lg text-start hover:bg-zinc-800 p-2">
           <div className="flex w-full items-center gap-x-2">
             <ProfileIcon userImage={userImage} />
             <div className="flex flex-col">
               {name ? (
-                <span className="text-sm font-medium">{name || ""}</span>
+                <span className="text-sm font-medium">{name.slice(0,18) || ""}</span>
               ) : null}
               {email ? (
-                <span className="text-xs font-light">{email}</span>
+                <span className="text-xs font-light">{email.slice(0,25)}</span>
               ) : null}
             </div>
             <PopoverContent className="flex flex-col gap-y-2 border-none bg-zinc-950 text-sm text-zinc-50">

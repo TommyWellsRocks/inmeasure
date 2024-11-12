@@ -3,8 +3,10 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
-import { AppSidebar } from "~/components/layout/AppSidebar";
-import { HeaderNav } from "~/components/layout/HeaderNav";
+import { AppSidebar } from "~/components/layout/AppSiderbar/AppSidebar";
+import { HeaderNav } from "~/components/layout/HeaderNav/HeaderNav";
+import { auth } from "~/server/auth";
+import { getUserCompanies } from "~/server/db/queries/layout";
 
 export const metadata: Metadata = {
   title: "InMeasure Analytics",
@@ -25,14 +27,17 @@ const InMeasureScript = `(function (fine, illTellYou, doYou, know, the, muffin, 
 	}
 })(window, document, "http://localhost:3000/api/v1", "script", "test123456789");`;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+  const companies = await getUserCompanies(session?.user?.id);
+
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="flex bg-zinc-950 text-white h-screen">
-        <AppSidebar />
-        <main className="flex flex-col w-full">
+      <body className="flex h-screen bg-zinc-950 text-white">
+        <AppSidebar companies={companies} session={session} />
+        <main className="flex w-full flex-col">
           <HeaderNav />
           {children}
         </main>

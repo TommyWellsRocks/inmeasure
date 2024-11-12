@@ -7,7 +7,7 @@ export function LoggedOutUserTab({
   userImage: string | null | undefined;
 }) {
   return (
-    <div className="group flex items-center justify-between gap-x-8 rounded-lg px-4 py-4 hover:bg-zinc-800">
+    <div className="group flex items-center justify-between gap-x-4 rounded-lg hover:bg-zinc-800 p-2">
       <div className="flex w-full items-center justify-between gap-x-2">
         <ProfileIcon userImage={userImage} />
         <LoginButton>
