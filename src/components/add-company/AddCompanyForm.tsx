@@ -24,7 +24,7 @@ import {
 } from "~/components/ui/select";
 import { addCompany, isCompanyDomain } from "~/server/actions/addCompany";
 
-import type { AnalyticsLevelType } from "~/server/types/scripts";
+import type { AnalyticsLevelType } from "~/server/types/tiers";
 import { getDomain } from "~/utils/getDomain";
 
 const tiers = ["bronze", "silver", "gold"];
@@ -71,7 +71,7 @@ export function AddCompanyForm({ userId }: { userId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex w-full max-w-[600px] flex-col gap-y-5"
+        className="flex flex-col gap-y-5"
       >
         <FormField
           control={form.control}
@@ -105,8 +105,12 @@ export function AddCompanyForm({ userId }: { userId: string }) {
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription>Suggestion: Copy the URL directly from your browser.</FormDescription>
-              <FormDescription>The subdomain and top level domain (TLD) matter.</FormDescription>
+              <FormDescription>
+                Suggestion: Copy the URL directly from your browser.
+              </FormDescription>
+              <FormDescription>
+                The subdomain and top level domain (TLD) matter.
+              </FormDescription>
             </FormItem>
           )}
         />

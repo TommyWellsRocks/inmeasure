@@ -3,10 +3,14 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
-import { AppSidebar } from "~/components/layout/AppSiderbar/AppSidebar";
-import { HeaderNav } from "~/components/layout/HeaderNav/HeaderNav";
+import { SetCompanies } from "~/hooks/useCompany";
 import { auth } from "~/server/auth";
 import { getUserCompanies } from "~/server/db/queries/layout";
+
+import { AppSidebar } from "~/components/layout/AppSiderbar/AppSidebar";
+import { HeaderNav } from "~/components/layout/HeaderNav/HeaderNav";
+
+import type { Companies } from "~/server/types/InMeasure";
 
 export const metadata: Metadata = {
   title: "InMeasure Analytics",
@@ -31,12 +35,17 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
-  const companies = await getUserCompanies(session?.user?.id);
+  const userId = session?.user?.id;
+  let companies: Companies | null = null;
+  if (userId) {
+    companies = await getUserCompanies(userId);
+  }
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen bg-zinc-950 text-white">
-        <AppSidebar companies={companies} session={session} />
+        <SetCompanies companies={companies} />
+        <AppSidebar session={session} />
         <main className="flex w-full flex-col">
           <HeaderNav />
           {children}

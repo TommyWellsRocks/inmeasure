@@ -1,7 +1,7 @@
 import { createTable } from "../helper";
 import { relations, sql } from "drizzle-orm";
 import { index, timestamp, varchar } from "drizzle-orm/pg-core";
-import { accounts } from "~/server/db/schema";
+import { accounts, clientUsers } from "~/server/db/schema";
 
 export const users = createTable(
   "user",
@@ -31,4 +31,5 @@ export const users = createTable(
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  clients: many(clientUsers),
 }));

@@ -1,6 +1,6 @@
 import { ArrowLeft, BookText, Home, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { Company, CompanyDropdown } from "./CompanyDropdown";
+import { CompanyDropdown } from "./CompanyDropdown";
 import { UserTab } from "./UserTab";
 import type { Session } from "next-auth";
 
@@ -33,6 +33,7 @@ const items = [
     subsections: [
       { title: "Introduction", url: "#introduction" },
       { title: "Getting Started", url: "#getting-started" },
+      { title: "Invite Your Team", url: "#invite" },
       { title: "Need Help", url: "#help" },
     ],
   },
@@ -68,13 +69,7 @@ function PlatformNav() {
   );
 }
 
-export function AppSidebar({
-  companies,
-  session,
-}: {
-  companies: Company[];
-  session: Session | null;
-}) {
+export function AppSidebar({ session }: { session: Session | null }) {
   return (
     <section className="flex flex-row-reverse gap-x-2">
       <input type="checkbox" id="toggle" className="peer hidden bg-white" />
@@ -89,7 +84,7 @@ export function AppSidebar({
         className={`flex min-w-[250px] flex-col justify-between rounded-md border-r-4 border-zinc-800 bg-zinc-900 p-2 peer-checked:hidden`}
       >
         <div className="flex flex-col gap-y-4">
-          <CompanyDropdown companies={companies} />
+          <CompanyDropdown />
           <PlatformNav />
         </div>
         <UserTab session={session} />

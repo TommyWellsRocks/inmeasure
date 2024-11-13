@@ -1,8 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { addCompanyAndAssignUser, isExistingDomain } from "../db/queries/addCompany";
-import type { AnalyticsLevelType } from "../types/scripts";
+import {
+  addCompanyAndAssignUser,
+  isExistingDomain,
+} from "../db/queries/addCompany";
+import type { AnalyticsLevelType } from "../types/tiers";
 
 export async function addCompany(
   userId: string,

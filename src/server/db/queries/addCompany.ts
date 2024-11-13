@@ -2,7 +2,7 @@ import "server-only";
 
 import { db } from "~/server/db";
 
-import type { AnalyticsLevelType } from "~/server/types/scripts";
+import type { AnalyticsLevelType } from "~/server/types/tiers";
 import { clients, clientUsers } from "../schema";
 import { getDomain } from "~/utils/getDomain";
 

@@ -2,38 +2,36 @@
 
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-
-export interface Company {
-  id: string;
-  name: string;
-  plan: string;
-}
+import { useCompany } from "~/hooks/useCompany";
+import { Company } from "~/server/types/InMeasure";
 
 function CompanyOption({
   company,
+  isSelected = false,
   hoverBG = true,
   children,
-  setter,
 }: {
   company: Company;
+  isSelected?: boolean;
   hoverBG?: boolean;
   children?: React.ReactNode;
-  setter?: React.Dispatch<React.SetStateAction<Company | null>>;
 }) {
+  const setCompany = useCompany.getState().setCompany;
   return (
     <div
-      onClick={() => (setter ? setter(company) : null)}
+      onClick={() => (isSelected ? null : setCompany(company.client!.id))}
       className={`flex w-full items-center justify-between rounded-lg bg-zinc-800 p-2 ${hoverBG && "hover:bg-zinc-950"}`}
     >
       <div className="flex flex-col items-start">
-        <span className="text-sm font-medium">{company.name}</span>
-        <span className="text-xs font-light">{company.plan}</span>
+        <span className="text-sm font-medium">
+          {company.client?.companyName}
+        </span>
+        <span className="text-xs font-light">{company.client?.tier}</span>
       </div>
       {children}
     </div>
@@ -56,9 +54,11 @@ function AddCompanyItem() {
   );
 }
 
-function SelectedCompany({ item }: { item: Company }) {
+function SelectedCompany() {
+  const company = useCompany((state) => state.company);
+
   return (
-    <CompanyOption company={item}>
+    <CompanyOption company={company!} isSelected>
       <div className="rounded-lg px-1 py-2">
         <Check height={18} />
       </div>
@@ -66,9 +66,11 @@ function SelectedCompany({ item }: { item: Company }) {
   );
 }
 
-function DropDown({ company }: { company: Company }) {
+function DropDown() {
+  const company = useCompany((state) => state.company);
+
   return (
-    <CompanyOption company={company} hoverBG={false}>
+    <CompanyOption company={company!} hoverBG={false} isSelected>
       <div className="rounded-lg px-1 py-2 group-hover:bg-zinc-800">
         <ChevronsUpDown height={18} />
       </div>
@@ -76,21 +78,21 @@ function DropDown({ company }: { company: Company }) {
   );
 }
 
-export function CompanyDropdown({ companies }: { companies: Company[] }) {
-  const defaultCompany = companies.length > 0 ? companies.at(0)! : null;
-  const [company, setCompany] = useState<Company | null>(defaultCompany);
+export function CompanyDropdown() {
+  const companies = useCompany((state) => state.companies);
+  const company = useCompany((state) => state.company);
 
   return company ? (
     <Popover>
       <PopoverTrigger>
-        <DropDown company={company} />
+        <DropDown />
 
         <PopoverContent className="flex flex-col gap-y-1 border-none bg-zinc-700 p-2 text-zinc-100">
-          {companies.map((item, i) =>
-            item.id === company.id ? (
-              <SelectedCompany key={i} item={item} />
+          {companies?.map((c, i) =>
+            c.client?.id === company.client?.id ? (
+              <SelectedCompany key={i} />
             ) : (
-              <CompanyOption key={i} company={item} setter={setCompany} />
+              <CompanyOption key={i} company={c} />
             ),
           )}
           <AddCompanyItem />

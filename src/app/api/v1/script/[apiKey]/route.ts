@@ -1,4 +1,4 @@
-import { scripts } from "~/server/types/scripts";
+import { scripts } from "~/server/types/tiers";
 import { readFile } from "fs/promises";
 import { getDomain } from "~/utils/getDomain";
 import { authorizeAndCreateConnection } from "~/server/db/queries/scriptAPI";

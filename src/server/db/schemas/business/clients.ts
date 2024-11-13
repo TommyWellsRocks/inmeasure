@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, pgEnum, varchar } from "drizzle-orm/pg-core";
-import { connectionEntries } from "~/server/db/schema";
+import { clientUsers, connectionEntries, users } from "~/server/db/schema";
 
 export const tierEnum = pgEnum("tier", ["bronze", "silver", "gold"]);
 
@@ -27,5 +27,6 @@ export const clients = createTable(
 );
 
 export const clientRelations = relations(clients, ({ many }) => ({
+  users: many(clientUsers),
   siteConnections: many(connectionEntries),
 }));
