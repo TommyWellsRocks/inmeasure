@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { create } from "zustand";
+import { addMemberToCompany } from "~/server/actions/addUserToCompany";
 
 import type { Companies, Company } from "~/server/types/InMeasure";
 
@@ -10,7 +11,7 @@ interface companyState {
   setCompanies: (company: Companies) => void;
   company: Company | null;
   setCompany: (companyId: string) => void;
-  // addCompanyMember: (userId: string, name: string, email: string) => void;
+  addCompanyMember: (userId: string, name: string, email: string) => void;
 }
 
 export const useCompany = create<companyState>((set, get) => ({
@@ -25,61 +26,53 @@ export const useCompany = create<companyState>((set, get) => ({
       if (!company) return state;
       return { ...state, company };
     }),
-  // addCompanyMember: (userId: string, name: string, email: string) => {
-  //   // Failsafe
-  //   const fallbackCompany = get().company!;
-  //   const fallbackCompanies = get().companies!;
-  //   const clientId = fallbackCompany.client?.id;
+  addCompanyMember: async (userId: string, name: string, email: string) => {
+    // Failsafe
+    const fallbackCompany = get().company!;
+    const fallbackCompanies = get().companies!;
+    const clientId = fallbackCompany.client?.id!;
 
-  //   // Optimistic Update
-  //   const optimisticUser = {
-  //     userId,
-  //     clientId,
-  //     user: {
-  //       name,
-  //       email,
-  //     },
-  //   };
-  //   const optimisticUsers = [
-  //     ...fallbackCompany?.client?.users!,
-  //     optimisticUser,
-  //   ];
-  //   const optimisticCompany = {
-  //     ...fallbackCompany,
-  //     client: { ...fallbackCompany?.client, users: optimisticUsers },
-  //   };
-  //   const optimisticCompanies = fallbackCompanies.map((c) =>
-  //     c.client?.id === clientId ? optimisticCompany : c,
-  //   );
+    // Optimistic Update
+    const optimisticCompany: Company = {
+      ...fallbackCompany,
+      client: {
+        ...fallbackCompany?.client!,
+        users: [
+          ...fallbackCompany?.client?.users!,
+          {
+            userId,
+            clientId,
+            user: {
+              name,
+              email,
+            },
+          },
+        ],
+      },
+    };
+    const optimisticCompanies: Companies = fallbackCompanies.map((c) =>
+      c.client?.id === clientId ? optimisticCompany : c,
+    );
 
-  //   set((state) => ({
-  //     ...state,
-  //     companies: optimisticCompanies,
-  //     company: optimisticCompany,
-  //   }));
+    set((state) => ({
+      ...state,
+      companies: optimisticCompanies,
+      company: optimisticCompany,
+    }));
 
-  //   // Actual Update
-  //   try {
-  //     const { id: realId } = await handleCreateProgram(userId, name);
-  //     if (!realId) throw "No realId error";
-  //     const actualPrograms = optimisticPrograms.map((program) =>
-  //       program.id === fakeId ? realProgram : program,
-  //     );
-  //     set((state) => ({
-  //       ...state,
-  //       companies: actualCompanies,
-  //       company: actualCompany,
-  //     }));
-  //   } catch (error) {
-  //     // Else Fallback Update
-  //     console.error(error);
-  //     set((state) => ({
-  //       ...state,
-  //       companies: fallbackCompanies,
-  //       company: fallbackCompany,
-  //     }));
-  //   }
-  // },
+    // Actual Update
+    try {
+      await addMemberToCompany(userId, clientId);
+    } catch (error) {
+      // Else Fallback Update
+      console.error(error);
+      set((state) => ({
+        ...state,
+        companies: fallbackCompanies,
+        company: fallbackCompany,
+      }));
+    }
+  },
 }));
 
 export function SetCompanies({ companies }: { companies: Companies | null }) {

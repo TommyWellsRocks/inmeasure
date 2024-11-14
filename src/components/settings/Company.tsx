@@ -14,23 +14,16 @@ export function Company() {
   return (
     <Section id="company">
       <SectionHeader text="Company" />
-      {client ? (
-        <>
-          <SettingsItem name="Company" value={client.companyName} />
+      <SettingsItem name="Company" value={client?.companyName || "None"} />
 
-          <SettingsItem name="Tier" value={client.tier} />
+      <SettingsItem name="Tier" value={client?.tier || "None"} />
 
-          <div className="flex flex-col gap-y-0">
-            <SettingsItem name="API Key" value={client.apiKey} />
-            <span className="text-xs text-zinc-400">**Do NOT Share This**</span>
-          </div>
+      <div className="flex flex-col gap-y-0">
+        <SettingsItem name="API Key" value={client?.apiKey || "None"} />
+        <span className="text-xs text-zinc-400">**Do NOT Share This**</span>
+      </div>
 
-          <Seats tierMaxSeats={tierSeats[client.tier]} />
-        </>
-      ) : (
-        <span>Create a company!</span>
-        // ! Something Here
-      )}
+      <Seats tierMaxSeats={client?.tier ? tierSeats[client?.tier] : 0} />
     </Section>
   );
 }

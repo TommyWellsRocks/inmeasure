@@ -5,10 +5,10 @@ import { clientUsers } from "../schema";
 
 export async function isUserEmail(email: string) {
   const user = await db.query.users.findFirst({
-    columns: { id: true },
+    columns: { id: true, name: true },
     where: (model, { eq }) => eq(model.email, email),
   });
-  return user ? user.id : false;
+  return user ? user : false;
 }
 
 export async function addUserToCompany(userId: string, clientId: string) {

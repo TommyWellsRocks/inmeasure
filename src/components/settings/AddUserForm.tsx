@@ -3,10 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  addMemberToCompany,
-  isExistingEmail,
-} from "~/server/actions/addUserToCompany";
+import { isExistingEmail } from "~/server/actions/addUserToCompany";
 
 import {
   Form,
@@ -18,7 +15,12 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { useCompany } from "~/hooks/useCompany";
-import { useState } from "react";
+
+type formUser = {
+  id: string;
+  name: string | null;
+  email: string;
+};
 
 export function AddUserForm({
   setter,
@@ -26,7 +28,9 @@ export function AddUserForm({
   setter: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const company = useCompany((state) => state.company)!;
-  const [userId, setUserId] = useState("");
+  const addMemberToCompany = useCompany.getState().addCompanyMember;
+  let userId = "";
+  let userName = "";
   const formSchema = z.object({
     email: z
       .string()
@@ -42,9 +46,10 @@ export function AddUserForm({
       )
       .refine(
         async (email) => {
-          const activeUserId = await isExistingEmail(email);
-          if (activeUserId) {
-            setUserId(activeUserId);
+          const activeUser = await isExistingEmail(email);
+          if (activeUser) {
+            userId = activeUser.id;
+            userName = activeUser.name || "New User";
             return true;
           }
           return false;
@@ -62,9 +67,9 @@ export function AddUserForm({
     },
   });
 
-  function onSubmit(_: z.infer<typeof formSchema>) {
+  function onSubmit(v: z.infer<typeof formSchema>) {
     setter(false);
-    addMemberToCompany(userId, company.client?.id!);
+    addMemberToCompany(userId, userName, v.email);
   }
 
   return (
