@@ -11,6 +11,7 @@ import { AppSidebar } from "~/components/layout/AppSiderbar/AppSidebar";
 import { HeaderNav } from "~/components/layout/HeaderNav/HeaderNav";
 
 import type { Companies } from "~/server/types/InMeasure";
+import { SetSession } from "~/hooks/useSession";
 
 export const metadata: Metadata = {
   title: "InMeasure Analytics",
@@ -44,6 +45,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen bg-zinc-950 text-white">
+        <SetSession session={session} />
         <SetCompanies companies={companies} />
         <AppSidebar session={session} />
         <main className="flex w-full flex-col">
