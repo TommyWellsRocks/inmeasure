@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "~/server/db";
 
 
-export async function getSourcesAndPagesCount(organizationId: string) {
+export async function getDashboardData(organizationId: string) {
   const allConnections = await db.query.connectionEntries.findMany({
     columns: { connectionId: true, realTimestamp: true },
     where: (model, { eq }) => eq(model.organizationId, organizationId),
