@@ -2,21 +2,21 @@
 
 import { redirect } from "next/navigation";
 import {
-  addCompanyAndAssignUser,
+  addOrganizationAndAssignUser,
   isExistingDomain,
-} from "../db/queries/addCompany";
+} from "../db/queries/addOrganization";
 import type { AnalyticsLevelType } from "../types/tiers";
 
-export async function addCompany(
+export async function addOrganization(
   userId: string,
   name: string,
   domain: string,
   tier: AnalyticsLevelType,
 ) {
-  await addCompanyAndAssignUser(userId, name, domain, tier);
+  await addOrganizationAndAssignUser(userId, name, domain, tier);
   return redirect("/");
 }
 
-export async function isCompanyDomain(domain: string) {
+export async function isOrganizationDomain(domain: string) {
   return await isExistingDomain(domain);
 }

@@ -47,8 +47,8 @@ export async function authorizeAndWriteMessage(
   connectionId: string,
 ) {
   await db.transaction(async (dbPen) => {
-    // Get the clientId where isClient and isConnectionId
-    const client = await dbPen.query.clients.findFirst({
+    // Get the organizationId where isOrganization and isConnectionId
+    const organization = await dbPen.query.organizations.findFirst({
       columns: { id: true },
       where: (model, { and, eq, exists }) =>
         and(
@@ -60,7 +60,7 @@ export async function authorizeAndWriteMessage(
               .from(connectionEntries)
               .where(
                 and(
-                  eq(connectionEntries.clientId, model.id),
+                  eq(connectionEntries.organizationId, model.id),
                   eq(connectionEntries.connectionId, connectionId),
                 ),
               ),
@@ -68,20 +68,20 @@ export async function authorizeAndWriteMessage(
         ),
     });
 
-    const clientId = client?.id;
-    if (clientId) {
+    const organizationId = organization?.id;
+    if (organizationId) {
       if ("ipAddress" in data) {
         // Initial Message
-        await postBrowserMessage(dbPen, data, clientId, connectionId);
+        await postBrowserMessage(dbPen, data, organizationId, connectionId);
       } else if ("resource" in data) {
         // Gold Event Message
-        await postGoldEventMessage(dbPen, data, clientId, connectionId);
+        await postGoldEventMessage(dbPen, data, organizationId, connectionId);
       } else if ("navigation" in data) {
         // Silver Event Message
-        await postSilverEventMessage(dbPen, data, clientId, connectionId);
+        await postSilverEventMessage(dbPen, data, organizationId, connectionId);
       } else if ("pageURL" in data) {
         // Bronze Event Message
-        await postBronzeEventMessage(dbPen, data, clientId, connectionId);
+        await postBronzeEventMessage(dbPen, data, organizationId, connectionId);
       }
     }
   });
@@ -90,11 +90,11 @@ export async function authorizeAndWriteMessage(
 async function postBrowserMessage(
   pen: DBPen,
   data: BrowserMessage,
-  clientId: string,
+  organizationId: string,
   connectionId: string,
 ) {
   await pen.insert(browserEntries).values({
-    clientId,
+    organizationId,
     connectionId,
     ...data,
     performanceTimestamp: String(data.performanceTimestamp),
@@ -104,10 +104,10 @@ async function postBrowserMessage(
 async function postGoldEventMessage(
   pen: DBPen,
   data: GoldEventMessage,
-  clientId: string,
+  organizationId: string,
   connectionId: string,
 ) {
-  const cc = { clientId, connectionId };
+  const cc = { organizationId, connectionId };
   await pen.insert(heartbeatEntries).values({
     ...cc,
     pageURL: data.pageURL,
@@ -278,10 +278,10 @@ async function postGoldEventMessage(
 async function postSilverEventMessage(
   pen: DBPen,
   data: SilverEventMessage,
-  clientId: string,
+  organizationId: string,
   connectionId: string,
 ) {
-  const cc = { clientId, connectionId };
+  const cc = { organizationId, connectionId };
   await pen.insert(heartbeatEntries).values({
     ...cc,
     pageURL: data.pageURL,
@@ -330,10 +330,10 @@ async function postSilverEventMessage(
 async function postBronzeEventMessage(
   pen: DBPen,
   data: BronzeEventMessage,
-  clientId: string,
+  organizationId: string,
   connectionId: string,
 ) {
-  const cc = { clientId, connectionId };
+  const cc = { organizationId, connectionId };
   await pen.insert(heartbeatEntries).values({
     ...cc,
     pageURL: data.pageURL,

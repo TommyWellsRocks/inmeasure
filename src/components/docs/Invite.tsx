@@ -11,8 +11,8 @@ export function InviteYourTeam() {
       <span>1. Make sure the user has an InMeasure account.</span>
       <span>
         2. Go to your{" "}
-        <Link href="/settings#company" className="underline">
-          company settings
+        <Link href="/settings#organization" className="underline">
+          organization settings
         </Link>
         .
       </span>

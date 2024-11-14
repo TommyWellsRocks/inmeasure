@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, bigint } from "drizzle-orm/pg-core";
 import {
-  clients,
+  organizations,
   browserEntries,
   heartbeatEntries,
   clickEventEntries,
@@ -24,8 +24,8 @@ export const connectionEntries = createTable(
     connectionId: varchar("connection_id")
       .$defaultFn(() => crypto.randomUUID())
       .primaryKey(),
-    clientId: varchar("client_id")
-      .references(() => clients.id, {
+    organizationId: varchar("organization_id")
+      .references(() => organizations.id, {
         onDelete: "cascade",
       })
       .notNull(),
@@ -34,7 +34,7 @@ export const connectionEntries = createTable(
       .notNull(),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );
@@ -42,9 +42,9 @@ export const connectionEntries = createTable(
 export const connectionRelations = relations(
   connectionEntries,
   ({ one, many }) => ({
-    client: one(clients, {
-      fields: [connectionEntries.clientId],
-      references: [clients.id],
+    organization: one(organizations, {
+      fields: [connectionEntries.organizationId],
+      references: [organizations.id],
     }),
     browserEntry: one(browserEntries, {
       fields: [connectionEntries.connectionId],

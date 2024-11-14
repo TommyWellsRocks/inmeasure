@@ -22,7 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { addCompany, isCompanyDomain } from "~/server/actions/addCompany";
+import {
+  addOrganization,
+  isOrganizationDomain,
+} from "~/server/actions/addOrganization";
 
 import type { AnalyticsLevelType } from "~/server/types/tiers";
 import { getDomain } from "~/utils/getDomain";
@@ -30,41 +33,46 @@ import { getDomain } from "~/utils/getDomain";
 const tiers = ["bronze", "silver", "gold"];
 
 const formSchema = z.object({
-  companyName: z
+  organizationName: z
     .string()
     .min(2, {
-      message: "Company name must be at least 2 characters.",
+      message: "Organization name must be at least 2 characters.",
     })
-    .max(50, { message: "Company name must be at most 50 characters." }),
+    .max(50, { message: "Organization name must be at most 50 characters." }),
   domain: z
     .string()
     .url()
     .refine(
       async (url) => {
-        if (await isCompanyDomain(getDomain(url))) {
+        if (await isOrganizationDomain(getDomain(url))) {
           return false;
         }
         return true;
       },
-      { message: "Client already exists. Join the company." },
+      { message: "Organization already exists. Join the organization." },
     ),
   tier: z.string().refine((t) => tiers.includes(t), {
-    message: "Company tier must be one from the list.",
+    message: "Organization tier must be one from the list.",
   }),
 });
 
-export function AddCompanyForm({ userId }: { userId: string }) {
+export function AddOrganizationForm({ userId }: { userId: string }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companyName: "",
+      organizationName: "",
       domain: "",
       tier: "bronze",
     },
   });
 
   function onSubmit(v: z.infer<typeof formSchema>) {
-    addCompany(userId, v.companyName, v.domain, v.tier as AnalyticsLevelType);
+    addOrganization(
+      userId,
+      v.organizationName,
+      v.domain,
+      v.tier as AnalyticsLevelType,
+    );
   }
 
   return (
@@ -75,10 +83,10 @@ export function AddCompanyForm({ userId }: { userId: string }) {
       >
         <FormField
           control={form.control}
-          name="companyName"
+          name="organizationName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company Name</FormLabel>
+              <FormLabel>Organization Name</FormLabel>
               <FormControl>
                 <Input
                   placeholder="InMeasure"
@@ -139,7 +147,7 @@ export function AddCompanyForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Add Company</Button>
+        <Button type="submit">Add Organization</Button>
       </form>
     </Form>
   );

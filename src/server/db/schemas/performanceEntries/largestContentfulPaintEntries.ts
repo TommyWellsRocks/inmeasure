@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, numeric, integer } from "drizzle-orm/pg-core";
-import { clients, connectionEntries } from "~/server/db/schema";
+import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const largestContentfulPaintEntries = createTable(
   "largest_contentful_paint_entries",
@@ -13,9 +13,12 @@ export const largestContentfulPaintEntries = createTable(
         onDelete: "cascade",
       },
     ),
-    clientId: varchar("client_id").references(() => clients.id, {
-      onDelete: "cascade",
-    }),
+    organizationId: varchar("organization_id").references(
+      () => organizations.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
     url: varchar("url").notNull(),
     size: integer("size").notNull(),
     duration: numeric("duration").notNull(),
@@ -24,7 +27,7 @@ export const largestContentfulPaintEntries = createTable(
     renderTime: numeric("render_time").notNull(),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );

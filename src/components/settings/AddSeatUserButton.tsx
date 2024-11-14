@@ -27,7 +27,7 @@ export function AddSeatUserButton() {
         <DialogHeader>
           <DialogTitle>Invite Your Team</DialogTitle>
           <DialogDescription>
-            Anyone you invite will take a seat at this company.
+            Anyone you invite will take a seat at this organization.
           </DialogDescription>
         </DialogHeader>
 

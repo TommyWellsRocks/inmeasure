@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, bigint } from "drizzle-orm/pg-core";
-import { clients, connectionEntries } from "~/server/db/schema";
+import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const heartbeatEntries = createTable(
   "heartbeat_entries",
@@ -13,8 +13,8 @@ export const heartbeatEntries = createTable(
         onDelete: "cascade",
       },
     ),
-    clientId: varchar("client_id")
-      .references(() => clients.id, {
+    organizationId: varchar("organization_id")
+      .references(() => organizations.id, {
         onDelete: "cascade",
       })
       .notNull(),
@@ -24,15 +24,15 @@ export const heartbeatEntries = createTable(
       .notNull(),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );
 
 export const heartbeatRelations = relations(heartbeatEntries, ({ one }) => ({
-  client: one(clients, {
-    fields: [heartbeatEntries.clientId],
-    references: [clients.id],
+  organization: one(organizations, {
+    fields: [heartbeatEntries.organizationId],
+    references: [organizations.id],
   }),
   connection: one(connectionEntries, {
     fields: [heartbeatEntries.connectionId],

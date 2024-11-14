@@ -8,7 +8,7 @@ import {
   boolean,
   varchar,
 } from "drizzle-orm/pg-core";
-import { clients, connectionEntries } from "~/server/db/schema";
+import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const layoutShiftEntries = createTable(
   "layout_shift_entries",
@@ -20,9 +20,12 @@ export const layoutShiftEntries = createTable(
         onDelete: "cascade",
       },
     ),
-    clientId: varchar("client_id").references(() => clients.id, {
-      onDelete: "cascade",
-    }),
+    organizationId: varchar("organization_id").references(
+      () => organizations.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
     startTime: numeric("start_time"),
     value: numeric("value"),
     duration: numeric("duration").notNull(),
@@ -46,7 +49,7 @@ export const layoutShiftEntries = createTable(
     currentRectLeft: integer("current_rect_left").notNull(),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );

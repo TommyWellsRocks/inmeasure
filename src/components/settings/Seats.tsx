@@ -1,6 +1,6 @@
 "use client";
 
-import { useCompany } from "~/hooks/useCompany";
+import { useOrganization } from "~/hooks/useOrganization";
 import { useSession } from "~/hooks/useSession";
 
 import { SettingsItem } from "./SettingsItem";
@@ -9,11 +9,13 @@ import { AddSeatUserButton } from "./AddSeatUserButton";
 
 export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
   const session = useSession((state) => state.session);
-  const company = useCompany((state) => state.company);
-  const removeCompanyMember = useCompany((state) => state.removeCompanyMember);
+  const organization = useOrganization((state) => state.organization);
+  const removeOrganizationUser = useOrganization(
+    (state) => state.removeOrganizationUser,
+  );
 
   const userId = session?.user?.id;
-  const users = company?.client?.users;
+  const users = organization?.organization?.users;
   const userCount = users?.length!;
   const hasSeatsAvailable = userCount < tierMaxSeats;
   return (
@@ -43,7 +45,7 @@ export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
                   key={i}
                   className="h-5"
                   onClick={() => {
-                    removeCompanyMember(user.userId!);
+                    removeOrganizationUser(user.userId!);
                   }}
                 >
                   <Trash2 height={15} />

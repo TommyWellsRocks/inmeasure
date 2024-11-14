@@ -2,20 +2,11 @@ import "server-only";
 
 import { db } from "~/server/db";
 
-export async function getUserClients(userId: string) {
-  return await db.query.clientUsers.findMany({
-    columns: { id: true },
-    where: (model, { eq }) => eq(model.userId, userId),
-    with: {
-      client: { columns: { id: true, companyName: true, domain: true } },
-    },
-  });
-}
 
-export async function getSourcesAndPagesCount(clientId: string) {
+export async function getSourcesAndPagesCount(organizationId: string) {
   const allConnections = await db.query.connectionEntries.findMany({
     columns: { connectionId: true, realTimestamp: true },
-    where: (model, { eq }) => eq(model.clientId, clientId),
+    where: (model, { eq }) => eq(model.organizationId, organizationId),
     with: {
       browserEntry: { columns: { source: true, pageURL: true } },
       heartbeatEntries: { columns: { pageURL: true } },

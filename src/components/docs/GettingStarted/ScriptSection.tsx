@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCompany } from "~/hooks/useCompany";
+import { useOrganization } from "~/hooks/useOrganization";
 
 import { CopyToClipboardButton } from "../CopyToClipboardButton";
 
 export function ScriptSection({ defaultScript }: { defaultScript: string }) {
-  const apiKey = useCompany((state) => state.company?.client?.apiKey);
+  const apiKey = useOrganization(
+    (state) => state.organization?.organization?.apiKey,
+  );
   let realScript = "";
   if (apiKey) {
     realScript = defaultScript.replaceAll("{{APIKEY}}", apiKey);
@@ -20,8 +22,8 @@ export function ScriptSection({ defaultScript }: { defaultScript: string }) {
         </>
       ) : (
         <span>
-          <Link href="add-company" className="underline">
-            Add your company
+          <Link href="add-organization" className="underline">
+            Add your organization
           </Link>{" "}
           to view your script...
         </span>

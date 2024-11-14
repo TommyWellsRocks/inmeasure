@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, bigint } from "drizzle-orm/pg-core";
-import { clients, connectionEntries } from "~/server/db/schema";
+import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const tabVisibilityEntries = createTable(
   "tab_visibility_entries",
@@ -13,14 +13,17 @@ export const tabVisibilityEntries = createTable(
         onDelete: "cascade",
       },
     ),
-    clientId: varchar("client_id").references(() => clients.id, {
-      onDelete: "cascade",
-    }),
+    organizationId: varchar("organization_id").references(
+      () => organizations.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
     visibility: varchar("visibility").notNull(),
     realTimestamp: bigint("real_timestamp", { mode: "number" }).notNull(),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );

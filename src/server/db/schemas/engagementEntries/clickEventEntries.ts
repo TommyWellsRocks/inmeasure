@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, varchar, serial, bigint, integer } from "drizzle-orm/pg-core";
-import { clients, connectionEntries } from "~/server/db/schema";
+import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const clickEventEntries = createTable(
   "click_event_entries",
@@ -13,9 +13,12 @@ export const clickEventEntries = createTable(
         onDelete: "cascade",
       },
     ),
-    clientId: varchar("client_id").references(() => clients.id, {
-      onDelete: "cascade",
-    }),
+    organizationId: varchar("organization_id").references(
+      () => organizations.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
     clickX: integer("click_x").notNull(),
     clickY: integer("click_y").notNull(),
     elementTag: varchar("element_tag").notNull(),
@@ -23,7 +26,7 @@ export const clickEventEntries = createTable(
     realTimestamp: bigint("real_timestamp", { mode: "number" }).notNull(),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );

@@ -1,6 +1,6 @@
 import {
   getSourcesAndPagesCount,
-  getUserClients,
+  getUserOrganizations,
 } from "~/server/db/queries/dashboard";
 
 import Link from "next/link";
@@ -17,25 +17,25 @@ export default async function Dashboard() {
   if (!userId)
     return redirect(`/login?return=${encodeURIComponent("/dashboard")}`);
 
-  const myCompanies = await getUserClients(userId);
-  const client = myCompanies.at(0)?.client;
-  const clientId = client?.id;
-  const clientName = client?.companyName;
-  const clientDomain = "http://" + client?.domain + ":3000";
+  const myOrganizations = await getUserOrganizations(userId);
+  const organization = myOrganizations.at(0);
+  const organizationId = organization?.organizationId;
+  const organizationName = organization?.organizationName;
+  const organizationDomain = "http://" + organization?.domain + ":3000";
 
-  if (!clientId) return;
+  if (!organizationId) return;
   const { pageVisitors, sourcesVisitors, connectionTimestamps } =
-    await getSourcesAndPagesCount(clientId);
+    await getSourcesAndPagesCount(organizationId);
 
   return (
     <main className="flex flex-col gap-y-20 px-10">
       <section className="flex flex-col gap-y-2">
-        <span className="text-xl font-semibold">{clientName}</span>
+        <span className="text-xl font-semibold">{organizationName}</span>
         <Link
-          href={clientDomain}
+          href={organizationDomain}
           className="text-sm underline underline-offset-1"
         >
-          {clientDomain}
+          {organizationDomain}
         </Link>
       </section>
 

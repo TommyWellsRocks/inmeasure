@@ -9,7 +9,7 @@ import {
   boolean,
   bigint,
 } from "drizzle-orm/pg-core";
-import { clients, connectionEntries } from "~/server/db/schema";
+import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const browserEntries = createTable(
   "browser_entries",
@@ -21,9 +21,12 @@ export const browserEntries = createTable(
         onDelete: "cascade",
       },
     ),
-    clientId: varchar("client_id").references(() => clients.id, {
-      onDelete: "cascade",
-    }),
+    organizationId: varchar("organization_id").references(
+      () => organizations.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
     ipAddress: varchar("ip_address"),
     windowWidth: integer("window_width"),
     windowHeight: integer("window_height"),
@@ -38,7 +41,7 @@ export const browserEntries = createTable(
     realTimestamp: bigint("real_timestamp", { mode: "number" }),
   },
   (table) => ({
-    clientIndex: index().on(table.clientId),
+    organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
 );

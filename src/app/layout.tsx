@@ -3,14 +3,14 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
-import { SetCompanies } from "~/hooks/useCompany";
+import { SetOrganizations } from "~/hooks/useOrganization";
 import { auth } from "~/server/auth";
-import { getUserCompanies } from "~/server/db/queries/layout";
+import { getUserOrganizations } from "~/server/db/queries/layout";
 
 import { AppSidebar } from "~/components/layout/AppSiderbar/AppSidebar";
 import { HeaderNav } from "~/components/layout/HeaderNav/HeaderNav";
 
-import type { Companies } from "~/server/types/InMeasure";
+import type { Organizations } from "~/server/types/InMeasure";
 import { SetSession } from "~/hooks/useSession";
 
 export const metadata: Metadata = {
@@ -19,34 +19,21 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const InMeasureScript = `(function (fine, illTellYou, doYou, know, the, muffin, man) {
-	if (!illTellYou.getElementById("im-script")) {
-		fine = doYou + "/" + know + "/" + the;
-		muffin = illTellYou.createElement(know);
-		muffin.type = "text/javascript";
-		muffin.async = !0;
-		muffin.src = fine;
-		muffin.id = "im-script";
-		man = illTellYou.getElementsByTagName(know)[0];
-		man.parentNode.insertBefore(muffin, man);
-	}
-})(window, document, "http://localhost:3000/api/v1", "script", "test123456789");`;
-
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
   const userId = session?.user?.id;
-  let companies: Companies | null = null;
+  let organizations: Organizations | null = null;
   if (userId) {
-    companies = await getUserCompanies(userId);
+    organizations = await getUserOrganizations(userId);
   }
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="flex h-screen bg-zinc-950 text-white">
         <SetSession session={session} />
-        <SetCompanies companies={companies} />
+        <SetOrganizations organizations={organizations} />
         <AppSidebar session={session} />
         <main className="flex w-full flex-col">
           <HeaderNav />

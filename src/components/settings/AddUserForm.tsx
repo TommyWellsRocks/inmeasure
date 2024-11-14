@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { isExistingEmail } from "~/server/actions/addUserToCompany";
+import { isExistingEmail } from "~/server/actions/addUserToOrganization";
 
 import {
   Form,
@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { useCompany } from "~/hooks/useCompany";
+import { useOrganization } from "~/hooks/useOrganization";
 
 type formUser = {
   id: string;
@@ -27,8 +27,8 @@ export function AddUserForm({
 }: {
   setter: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const company = useCompany((state) => state.company)!;
-  const addMemberToCompany = useCompany.getState().addCompanyMember;
+  const organization = useOrganization((state) => state.organization)!;
+  const addUserToOrganization = useOrganization.getState().addOrganizationUser;
   let userId = "";
   let userName = "";
   const formSchema = z.object({
@@ -37,12 +37,16 @@ export function AddUserForm({
       .email()
       .refine(
         (email) => {
-          if (company.client?.users.find((u) => u.user?.email === email)) {
+          if (
+            organization.organization?.users.find(
+              (u) => u.user?.email === email,
+            )
+          ) {
             return false;
           }
           return true;
         },
-        { message: "This user is already a member of this company." },
+        { message: "This user is already a user of this organization." },
       )
       .refine(
         async (email) => {
@@ -69,7 +73,7 @@ export function AddUserForm({
 
   function onSubmit(v: z.infer<typeof formSchema>) {
     setter(false);
-    addMemberToCompany(userId, userName, v.email);
+    addUserToOrganization(userId, userName, v.email);
   }
 
   return (

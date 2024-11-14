@@ -1,6 +1,6 @@
 import { ArrowLeft, BookText, Home, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { CompanyDropdown } from "./CompanyDropdown";
+import { OrganizationDropdown } from "./OrganizationDropdown";
 import { UserTab } from "./UserTab";
 import type { Session } from "next-auth";
 
@@ -84,7 +84,7 @@ export function AppSidebar({ session }: { session: Session | null }) {
         className={`flex min-w-[250px] flex-col justify-between rounded-md border-r-4 border-zinc-800 bg-zinc-900 p-2 peer-checked:hidden`}
       >
         <div className="flex flex-col gap-y-4">
-          <CompanyDropdown />
+          <OrganizationDropdown />
           <PlatformNav />
         </div>
         <UserTab session={session} />

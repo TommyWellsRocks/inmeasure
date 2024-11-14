@@ -25,14 +25,14 @@ export { verificationTokens } from "~/server/db/schemas/common/verificationToken
 
 // Business
 export {
-  clients,
-  clientRelations,
+  organizations,
+  organizationRelations,
   tierEnum,
-} from "~/server/db/schemas/business/clients";
+} from "~/server/db/schemas/business/organizations";
 export {
-  clientUsers,
-  clientUserRelations,
-} from "~/server/db/schemas/business/clientUsers";
+  organizationUsers,
+  organizationUserRelations,
+} from "~/server/db/schemas/business/organizationUsers";
 
 // General Entries
 export {

@@ -17,7 +17,10 @@ export async function GET(
 
     if (authResponse) {
       const connectionId = authResponse.connectionId;
-      let script = await readFile(scripts[authResponse.clientTier], "utf-8");
+      let script = await readFile(
+        scripts[authResponse.organizationTier],
+        "utf-8",
+      );
 
       const replacements = {
         "{{APIKEY}}": apiKey,

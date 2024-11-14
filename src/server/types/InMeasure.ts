@@ -1,4 +1,4 @@
-import { getUserCompanies } from "../db/queries/layout";
+import { getUserOrganizations } from "../db/queries/layout";
 
-export type Companies = Awaited<ReturnType<typeof getUserCompanies>>
-export type Company = Companies[0];
+export type Organizations = Awaited<ReturnType<typeof getUserOrganizations>>;
+export type Organization = Organizations[0];

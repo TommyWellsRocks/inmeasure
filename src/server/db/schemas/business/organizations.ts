@@ -1,19 +1,19 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
 import { index, pgEnum, varchar } from "drizzle-orm/pg-core";
-import { clientUsers, connectionEntries, users } from "~/server/db/schema";
+import { organizationUsers, connectionEntries } from "~/server/db/schema";
 
 export const tierEnum = pgEnum("tier", ["bronze", "silver", "gold"]);
 
-export const clients = createTable(
-  "clients",
+export const organizations = createTable(
+  "organizations",
   {
     id: varchar("id", { length: 255 })
       .notNull()
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
     tier: tierEnum("tier").default("bronze").notNull(),
-    companyName: varchar("company_name").notNull(),
+    organizationName: varchar("organization_name").notNull(),
     domain: varchar("domain").notNull(),
     apiKey: varchar("apiKey")
       .notNull()
@@ -26,7 +26,7 @@ export const clients = createTable(
   }),
 );
 
-export const clientRelations = relations(clients, ({ many }) => ({
-  users: many(clientUsers),
+export const organizationRelations = relations(organizations, ({ many }) => ({
+  users: many(organizationUsers),
   siteConnections: many(connectionEntries),
 }));
