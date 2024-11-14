@@ -2,7 +2,10 @@
 
 import { useEffect } from "react";
 import { create } from "zustand";
-import { addMemberToCompany } from "~/server/actions/addUserToCompany";
+import {
+  addMemberToCompany,
+  removeMemberFromCompany,
+} from "~/server/actions/addUserToCompany";
 
 import type { Companies, Company } from "~/server/types/InMeasure";
 
@@ -12,6 +15,7 @@ interface companyState {
   company: Company | null;
   setCompany: (companyId: string) => void;
   addCompanyMember: (userId: string, name: string, email: string) => void;
+  removeCompanyMember: (userId: string) => void;
 }
 
 export const useCompany = create<companyState>((set, get) => ({
@@ -63,6 +67,45 @@ export const useCompany = create<companyState>((set, get) => ({
     // Actual Update
     try {
       await addMemberToCompany(userId, clientId);
+    } catch (error) {
+      // Else Fallback Update
+      console.error(error);
+      set((state) => ({
+        ...state,
+        companies: fallbackCompanies,
+        company: fallbackCompany,
+      }));
+    }
+  },
+  removeCompanyMember: async (userId: string) => {
+    // Failsafe
+    const fallbackCompany = get().company!;
+    const fallbackCompanies = get().companies!;
+    const clientId = fallbackCompany.client?.id!;
+
+    // Optimistic Update
+    const optimisticCompany: Company = {
+      ...fallbackCompany,
+      client: {
+        ...fallbackCompany?.client!,
+        users: fallbackCompany.client!.users.filter(
+          (user) => user.userId !== userId,
+        ),
+      },
+    };
+    const optimisticCompanies: Companies = fallbackCompanies.map((c) =>
+      c.client?.id === clientId ? optimisticCompany : c,
+    );
+
+    set((state) => ({
+      ...state,
+      companies: optimisticCompanies,
+      company: optimisticCompany,
+    }));
+
+    // Actual Update
+    try {
+      await removeMemberFromCompany(userId, clientId);
     } catch (error) {
       // Else Fallback Update
       console.error(error);

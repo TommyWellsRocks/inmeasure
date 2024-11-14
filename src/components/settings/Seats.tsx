@@ -10,6 +10,8 @@ import { AddSeatUserButton } from "./AddSeatUserButton";
 export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
   const session = useSession((state) => state.session);
   const company = useCompany((state) => state.company);
+  const removeCompanyMember = useCompany((state) => state.removeCompanyMember);
+
   const userId = session?.user?.id;
   const users = company?.client?.users;
   const userCount = users?.length!;
@@ -30,18 +32,24 @@ export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
 
           <div className="flex flex-col gap-y-2">
             <span className="text-base font-medium">Email</span>
-            {users?.map((user, i) => <span>{user?.user?.email}</span>)}
+            {users?.map((user, i) => <span key={i}>{user?.user?.email}</span>)}
           </div>
 
           <div className="flex flex-col gap-y-2">
             <div className="h-6" />
-            {users?.map((user) =>
+            {users?.map((user, i) =>
               user.userId !== userId ? (
-                <button className="h-5" onClick={() => {}}>
+                <button
+                  key={i}
+                  className="h-5"
+                  onClick={() => {
+                    removeCompanyMember(user.userId!);
+                  }}
+                >
                   <Trash2 height={15} />
                 </button>
               ) : (
-                <div className="h-5" />
+                <div key={i} className="h-5" />
               ),
             )}
           </div>
