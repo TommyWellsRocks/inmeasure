@@ -16,6 +16,7 @@ interface companyState {
   setCompany: (companyId: string) => void;
   addCompanyMember: (userId: string, name: string, email: string) => void;
   removeCompanyMember: (userId: string) => void;
+  logoutCompanies: () => void;
 }
 
 export const useCompany = create<companyState>((set, get) => ({
@@ -116,6 +117,8 @@ export const useCompany = create<companyState>((set, get) => ({
       }));
     }
   },
+  logoutCompanies: () =>
+    set((state) => ({ ...state, companies: null, company: null })),
 }));
 
 export function SetCompanies({ companies }: { companies: Companies | null }) {

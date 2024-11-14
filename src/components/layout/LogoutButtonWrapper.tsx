@@ -1,14 +1,14 @@
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-import { signIn } from "~/server/auth";
+import { signOut } from "~/server/auth";
 
-export function LoginButton({ children }: { children: React.ReactNode }) {
+export function LogoutButtonWrapper({ children }: { children: React.ReactNode }) {
   return (
     <form
       action={async () => {
         "use server";
         try {
-          await signIn("google");
+          await signOut();
         } catch (error) {
           if (error instanceof AuthError) {
             return redirect(`/?error=${error}`);

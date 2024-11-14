@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
-import { LoginButton } from "~/components/layout/LoginButton";
+import { LoginButtonWrapper } from "~/components/layout/LoginButtonWrapper";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,7 @@ export default async function SignIn({
   return (
     <main className="flex h-screen flex-col items-center justify-center gap-5">
       <div className="text-3xl font-semibold">Sign In / Sign Up</div>
-      <LoginButton>
+      <LoginButtonWrapper>
         <button
           className="flex gap-2 rounded-md border border-zinc-500 px-4 py-2 text-base"
           type="submit"
@@ -30,7 +30,7 @@ export default async function SignIn({
           />
           <span>Continue with Google</span>
         </button>
-      </LoginButton>
+      </LoginButtonWrapper>
     </main>
   );
 }
