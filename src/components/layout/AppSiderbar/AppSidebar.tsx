@@ -43,28 +43,29 @@ function PlatformNav() {
   return (
     <section className="flex flex-col gap-y-2 px-2">
       <span className="text-xs font-light text-zinc-400">InMeasure</span>
-      <div className="flex flex-col gap-y-6">
+      <nav className="flex flex-col gap-y-6">
         {items.map((item, index) => (
-          <nav className="flex flex-col gap-y-1">
-            <div
-              key={index}
-              className="flex items-center gap-x-2 font-semibold"
-            >
+          <div key={index} className="flex flex-col gap-y-1">
+            <div className="flex items-center gap-x-2 font-semibold">
               <item.icon height={20} />
               <Link href={item.url} className="flex w-full items-center">
                 {item.title}
               </Link>
             </div>
             <div className="ml-10 flex flex-col gap-y-1 font-extralight">
-              {item.subsections?.map((sub) => (
-                <Link className="hover:font-medium" href={item.url + sub.url}>
+              {item.subsections?.map((sub, i) => (
+                <Link
+                  key={i}
+                  className="hover:font-medium"
+                  href={item.url + sub.url}
+                >
                   {sub.title}
                 </Link>
               ))}
             </div>
-          </nav>
+          </div>
         ))}
-      </div>
+      </nav>
     </section>
   );
 }

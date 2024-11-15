@@ -22,7 +22,7 @@ export async function authorizeAndCreateConnection(
         .returning({ connectionId: connectionEntries.connectionId });
 
       const organizationTier = organization.tier;
-      const connectionId = startEntries.at(0)?.connectionId!;
+      const connectionId = startEntries.at(0)!.connectionId;
 
       return { organizationTier, connectionId };
     }

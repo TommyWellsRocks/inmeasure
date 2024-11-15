@@ -16,25 +16,29 @@ export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
 
   const userId = session?.user?.id;
   const users = organization?.organization?.users;
-  const userCount = users?.length!;
+  const userCount = users?.length || 0;
   const hasSeatsAvailable = userCount < tierMaxSeats;
   return (
     <div className="flex flex-col items-start gap-y-2">
       <SettingsItem
         name="Seats"
-        value={`${userCount || 0} / ${tierMaxSeats}`}
+        value={`${userCount} / ${tierMaxSeats}`}
       />
 
       <div className="flex flex-col gap-y-2">
         <div className="flex gap-x-5 rounded-md bg-zinc-800 p-2 text-sm">
           <div className="flex flex-col gap-y-2">
             <span className="text-base font-medium">Name</span>
-            {users?.map((user, i) => <span key={i}>{user?.user?.name}</span>)}
+            {users?.map((user, i) => (
+              <span key={i}>{user.user?.name}</span>
+            ))}
           </div>
 
           <div className="flex flex-col gap-y-2">
             <span className="text-base font-medium">Email</span>
-            {users?.map((user, i) => <span key={i}>{user?.user?.email}</span>)}
+            {users?.map((user, i) => (
+              <span key={i}>{user.user?.email}</span>
+            ))}
           </div>
 
           <div className="flex flex-col gap-y-2">

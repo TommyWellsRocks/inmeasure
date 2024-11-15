@@ -1,6 +1,11 @@
 /** @type {import("eslint").Linter.Config} */
 const config = {
-  ignorePatterns: ["bronzeScript.js", "silverScript.js", "goldScript.js"],
+  ignorePatterns: [
+    "bronzeScript.js",
+    "silverScript.js",
+    "goldScript.js",
+    "copyScript.js",
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: true,
@@ -34,6 +39,7 @@ const config = {
         argsIgnorePattern: "^_",
       },
     ],
+    "@typescript-eslint/no-empty-object-type": "warn",
     "@typescript-eslint/no-unsafe-argument": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/require-await": "off",

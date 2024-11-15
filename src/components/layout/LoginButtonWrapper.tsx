@@ -1,8 +1,11 @@
-import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn } from "~/server/auth";
 
-export function LoginButtonWrapper({ children }: { children: React.ReactNode }) {
+export function LoginButtonWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <form
       action={async () => {
@@ -10,10 +13,8 @@ export function LoginButtonWrapper({ children }: { children: React.ReactNode }) 
         try {
           await signIn("google");
         } catch (error) {
-          if (error instanceof AuthError) {
-            return redirect(`/?error=${error}`);
-          }
-          throw error;
+          console.log(error);
+          return redirect("/?error=loginError");
         }
       }}
     >

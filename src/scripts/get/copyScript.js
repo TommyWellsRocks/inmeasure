@@ -1,12 +1,11 @@
-(function (fine, illTellYou, doYou, know, the, muffin, man) {
-  if (!illTellYou.getElementById("im-script")) {
-    fine = doYou + "/" + know + "/" + the;
-    muffin = illTellYou.createElement(know);
-    muffin.type = "text/javascript";
-    muffin.async = !0;
-    muffin.src = fine;
-    muffin.id = "im-script";
-    man = illTellYou.getElementsByTagName(know)[0];
-    man.parentNode.insertBefore(muffin, man);
-  }
-})(window, document, "http://localhost:3000/api/v1", "script", "{{APIKEY}}");
+(function () {
+    if (!document.getElementById("im-script")) {
+        const element = document.createElement("script");
+        element.type = "text/javascript";
+        element.async = true;
+        element.src = "http://localhost:3000/api/v1/script/{{APIKEY}}";
+        element.id = "im-script";
+        const first = document.getElementsByTagName("script")[0];
+        first.parentNode.insertBefore(element, first);
+    }
+})();

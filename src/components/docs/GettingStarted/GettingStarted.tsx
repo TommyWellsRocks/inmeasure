@@ -12,7 +12,7 @@ export function GettingStarted() {
       <CopyScript />
 
       <span>
-        That's it. All setup. Go to your{" "}
+        That&apos;s it. All setup. Go to your{" "}
         <Link href="/dashboard" className="underline">
           dashboard
         </Link>

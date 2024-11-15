@@ -30,9 +30,9 @@ import { ExtractTablesWithRelations } from "drizzle-orm";
 
 type DBPen = PgTransaction<
   VercelPgQueryResultHKT,
-  typeof import("/Users/tommywells/Developer/inmeasure/website/inmeasure/src/server/db/schema"),
+  typeof import("src/server/db/schema"),
   ExtractTablesWithRelations<
-    typeof import("/Users/tommywells/Developer/inmeasure/website/inmeasure/src/server/db/schema")
+    typeof import("src/server/db/schema")
   >
 >;
 

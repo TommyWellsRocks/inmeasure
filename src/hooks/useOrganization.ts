@@ -28,7 +28,7 @@ export const useOrganization = create<organizationState>((set, get) => ({
     set((state) => {
       if (!state.organizations) return state;
       const organization = state.organizations.find(
-        (c) => c.organization?.id === organizationId,
+        (c) => c.organization!.id === organizationId,
       );
       if (!organization) return state;
       return { ...state, organization };
@@ -37,15 +37,15 @@ export const useOrganization = create<organizationState>((set, get) => ({
     // Failsafe
     const fallbackOrganization = get().organization!;
     const fallbackOrganizations = get().organizations!;
-    const organizationId = fallbackOrganization.organization?.id!;
+    const organizationId = fallbackOrganization.organization!.id;
 
     // Optimistic Update
     const optimisticOrganization: Organization = {
       ...fallbackOrganization,
       organization: {
-        ...fallbackOrganization?.organization!,
+        ...fallbackOrganization.organization!,
         users: [
-          ...fallbackOrganization?.organization?.users!,
+          ...fallbackOrganization.organization!.users,
           {
             userId,
             organizationId,
@@ -85,13 +85,13 @@ export const useOrganization = create<organizationState>((set, get) => ({
     // Failsafe
     const fallbackOrganization = get().organization!;
     const fallbackOrganizations = get().organizations!;
-    const organizationId = fallbackOrganization.organization?.id!;
+    const organizationId = fallbackOrganization.organization!.id;
 
     // Optimistic Update
     const optimisticOrganization: Organization = {
       ...fallbackOrganization,
       organization: {
-        ...fallbackOrganization?.organization!,
+        ...fallbackOrganization.organization!,
         users: fallbackOrganization.organization!.users.filter(
           (user) => user.userId !== userId,
         ),
