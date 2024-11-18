@@ -1,7 +1,7 @@
 export const scripts = {
-  bronze: "src/scripts/listener/bronzeScript.js",
-  silver: "src/scripts/listener/silverScript.js",
-  gold: "src/scripts/listener/goldScript.js",
+  bronze: "public/scripts/listener/bronzeScript.js",
+  silver: "public/scripts/listener/silverScript.js",
+  gold: "public/scripts/listener/goldScript.js",
 };
 
 export type AnalyticsLevelType = "bronze" | "silver" | "gold";
