@@ -2,9 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
 import { LoginButtonWrapper } from "~/components/layout/LoginButtonWrapper";
 
-export const dynamic = "force-dynamic";
-
-export default async function SignIn({
+export default async function Login({
   searchParams,
 }: {
   searchParams: { return: string };

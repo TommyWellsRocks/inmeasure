@@ -9,6 +9,7 @@ import Link from "next/link";
 import { TotalVisitorsTable } from "~/components/dashboard/TotalVisitorsTable";
 import { SourcesTable } from "~/components/dashboard/SourcesTable";
 import { TopPagesTable } from "~/components/dashboard/TopPagesTable";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const org = useOrganization((state) => state.organization?.organization);
@@ -19,6 +20,7 @@ export default function Dashboard() {
   const [connectionTimestamps, setConnectionTimestamps] = useState<number[]>(
     [],
   );
+  const router = useRouter();
 
   useEffect(() => {
     if (org)
@@ -29,7 +31,7 @@ export default function Dashboard() {
       });
   }, [org]);
 
-  if (!org) return;
+  if (!org) return router.push("/");
 
   const orgDomain = "https://" + org.domain;
 
