@@ -1,5 +1,4 @@
 import { scripts } from "~/server/types/tiers";
-import { readFile } from "fs/promises";
 import { getDomain } from "~/utils/getDomain";
 import { authorizeAndCreateConnection } from "~/server/db/queries/scriptAPI";
 
@@ -17,10 +16,7 @@ export async function GET(
 
     if (authResponse) {
       const connectionId = authResponse.connectionId;
-      let script = await readFile(
-        scripts[authResponse.organizationTier],
-        "utf-8",
-      );
+      let script = scripts[authResponse.organizationTier];
 
       const replacements = {
         "{{APIKEY}}": apiKey,

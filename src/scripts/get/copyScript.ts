@@ -5,8 +5,7 @@
     element.async = true;
     element.src = "https://www.inmeasure.com/api/v1/script/{{APIKEY}}";
     element.id = "im-script";
-    const first = document.getElementsByTagName("script")[0];
-    if (first && first.parentNode)
-      first.parentNode.insertBefore(element, first);
+    const first = document.getElementsByTagName("script")[0]!;
+    first.parentNode!.insertBefore(element, first);
   }
 })();

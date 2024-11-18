@@ -1,9 +1,7 @@
-import { readFile } from "fs/promises";
+import { copyScript } from "~/server/types/tiers";
 import { ScriptSection } from "./ScriptSection";
 
 export async function CopyScript() {
-  const copyScript = await readFile("/scripts/get/copyScript.js", "utf-8");
-
   return (
     <div className="flex flex-col gap-y-2">
       <span className="text-sm">Copy this to your site.</span>
