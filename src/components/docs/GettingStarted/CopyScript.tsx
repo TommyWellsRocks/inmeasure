@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { ScriptSection } from "./ScriptSection";
 
 export async function CopyScript() {
-  const copyScript = await readFile("scripts/get/copyScript.js", "utf-8");
+  const copyScript = await readFile("/scripts/get/copyScript.js", "utf-8");
 
   return (
     <div className="flex flex-col gap-y-2">
