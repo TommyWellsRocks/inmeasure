@@ -21,17 +21,15 @@ export const metadata: Metadata = {
 };
 
 const InMeasureScript = `(function () {
-    if (!document.getElementById("im-script")) {
-        const element = document.createElement("script");
-        element.type = "text/javascript";
-        element.async = true;
-        element.src = "https://www.inmeasure.com/api/v1/script/test123456789";
-        element.id = "im-script";
-        const first = document.getElementsByTagName("script")[0];
-        first.parentNode.insertBefore(element, first);
-    }
-})();
-`;
+  if (!document.getElementById("im-script")) {
+    const element = document.createElement("script");
+    element.type = "text/javascript";
+    element.async = true;
+    element.src = "https://www.inmeasure.com/api/v1/script/test123456789";
+    element.id = "im-script";
+    document.head.appendChild(element);
+  }
+})();`;
 
 export default async function RootLayout({
   children,
