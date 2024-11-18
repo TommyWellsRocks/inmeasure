@@ -10,11 +10,11 @@ type PerformanceEvent =
   | "largest-contentful-paint"
   | "layout-shift";
 
-async function sendPost(data: BrowserMessage | GoldEventMessage) {
-  await fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+function sendPost(data: BrowserMessage | GoldEventMessage) {
+  fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
     method: "POST",
     body: JSON.stringify({ ...data, realTimestamp: Date.now() }),
-  });
+  }).catch((err) => console.error("Failed to send data:", err));
 }
 
 function getEventEntryItems(eventType: PerformanceEvent, entry: any) {
@@ -378,12 +378,12 @@ async function postData() {
     performanceTimestamp: performance.now(),
     realTimestamp: 0,
   };
-  await sendPost(initialMessage);
+  sendPost(initialMessage);
 
   // Send Every 10 Seconds (If NewData)
-  setInterval(async () => {
+  setInterval(() => {
     if (hasNewData) {
-      await sendPost(newData);
+      sendPost(newData);
       emptyNewData();
     }
   }, 10000);

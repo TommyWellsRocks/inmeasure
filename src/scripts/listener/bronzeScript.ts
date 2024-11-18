@@ -3,11 +3,11 @@ import type {
   BrowserMessage,
 } from "~/server/types/analytics";
 
-async function sendPost(data: BrowserMessage | BronzeEventMessage) {
-  await fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+function sendPost(data: BrowserMessage | BronzeEventMessage) {
+  fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
     method: "POST",
     body: JSON.stringify({ ...data, realTimestamp: Date.now() }),
-  });
+  }).catch((err) => console.error("Failed to send data:", err));
 }
 
 function emptyNewData() {
@@ -76,11 +76,11 @@ async function postData() {
     performanceTimestamp: performance.now(),
     realTimestamp: 0,
   };
-  await sendPost(initialMessage);
+  sendPost(initialMessage);
 
-  // Send Every 10 Seconds  
-  setInterval(async () => {
-    await sendPost(newData);
+  // Send Every 10 Seconds
+  setInterval(() => {
+    sendPost(newData);
     emptyNewData();
   }, 10000);
 }

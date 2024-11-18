@@ -8,12 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 function sendPost(data) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
-            method: "POST",
-            body: JSON.stringify(Object.assign(Object.assign({}, data), { realTimestamp: Date.now() })),
-        });
-    });
+    fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+        method: "POST",
+        body: JSON.stringify(Object.assign(Object.assign({}, data), { realTimestamp: Date.now() })),
+    }).catch((err) => console.error("Failed to send data:", err));
 }
 function getEventEntryItems(eventType, entry) {
     if (eventType === "resource") {
@@ -354,14 +352,14 @@ function postData() {
             performanceTimestamp: performance.now(),
             realTimestamp: 0,
         };
-        yield sendPost(initialMessage);
+        sendPost(initialMessage);
         // Send Every 10 Seconds (If NewData)
-        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+        setInterval(() => {
             if (hasNewData) {
-                yield sendPost(newData);
+                sendPost(newData);
                 emptyNewData();
             }
-        }), 10000);
+        }, 10000);
     });
 }
 // * Main
