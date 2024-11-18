@@ -4,7 +4,7 @@ import type {
 } from "~/server/types/analytics";
 
 function sendPost(data: BrowserMessage | SilverEventMessage) {
-  fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+  fetch("https://www.inmeasure.com/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
     method: "POST",
     body: JSON.stringify({ ...data, realTimestamp: Date.now() }),
   }).catch((err) => console.error("Failed to send data:", err));
