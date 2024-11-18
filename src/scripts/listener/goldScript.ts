@@ -166,10 +166,6 @@ async function getIPAddress() {
     .then((data) => data.ip);
 }
 
-function getHasTouchScreen() {
-  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-}
-
 function recordMouseMovement() {
   const throttledMouseMove = throttle((e: MouseEvent) => {
     const newEvent = {
@@ -368,7 +364,7 @@ async function postData() {
     ipAddress: await getIPAddress(),
     windowWidth: window.innerWidth,
     windowHeight: window.innerHeight,
-    hasTouchScreen: getHasTouchScreen(),
+    hasTouchScreen: "ontouchstart" in window || navigator.maxTouchPoints > 0,
     userAgent: navigator.userAgent,
     language: navigator.language,
     platform: "platform" in navigator ? navigator.platform : null,

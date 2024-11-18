@@ -56,7 +56,6 @@ function emptyNewData() {
     newData.tabVisibilityEvents = [];
     newData.pageURL = "";
     newData.realTimestamp = 0;
-    hasNewData = false;
 }
 // * Mini Getter Functions
 function getIPAddress() {
@@ -66,14 +65,10 @@ function getIPAddress() {
             .then((data) => data.ip);
     });
 }
-function getHasTouchScreen() {
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-}
 function recordPageChange() {
     // Function to handle URL changes
     function handleUrlChange(url) {
         newData.pageURL = url;
-        hasNewData = true;
     }
     // Initial URL log
     handleUrlChange(window.location.href);
@@ -100,7 +95,6 @@ function recordTabHidden() {
             realTimestamp: Date.now(),
         };
         newData.tabVisibilityEvents.push(newEvent);
-        hasNewData = true;
     });
 }
 function startEventsObserver() {
@@ -108,7 +102,6 @@ function startEventsObserver() {
     const observer = new PerformanceObserver((list) => list.getEntries().forEach((entry) => {
         const newEntry = getEventEntryItems(entry);
         newData.navigation = newEntry;
-        hasNewData = true;
     }));
     observer.observe({ type: "navigation", buffered: true });
 }
@@ -118,7 +111,6 @@ function startManualEventsObserver() {
         if ((entry === null || entry === void 0 ? void 0 : entry.duration) && entry.duration > 0) {
             const newEntry = getEventEntryItems(entry);
             newData.navigation = newEntry;
-            hasNewData = true;
             clearInterval(observerCheckup);
         }
     }, 1000);
@@ -145,7 +137,7 @@ function postData() {
             ipAddress: yield getIPAddress(),
             windowWidth: window.innerWidth,
             windowHeight: window.innerHeight,
-            hasTouchScreen: getHasTouchScreen(),
+            hasTouchScreen: "ontouchstart" in window || navigator.maxTouchPoints > 0,
             userAgent: navigator.userAgent,
             language: navigator.language,
             platform: "platform" in navigator ? navigator.platform : null,
@@ -170,7 +162,6 @@ const newData = {
     pageURL: "",
     realTimestamp: 0,
 };
-let hasNewData = false;
 getPerformanceData();
 getEngagementData();
 postData();

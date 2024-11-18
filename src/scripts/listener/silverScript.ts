@@ -54,7 +54,6 @@ function emptyNewData() {
   newData.tabVisibilityEvents = [];
   newData.pageURL = "";
   newData.realTimestamp = 0;
-  hasNewData = false;
 }
 
 // * Mini Getter Functions
@@ -64,15 +63,10 @@ async function getIPAddress() {
     .then((data) => data.ip);
 }
 
-function getHasTouchScreen() {
-  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-}
-
 function recordPageChange() {
   // Function to handle URL changes
   function handleUrlChange(url: string) {
     newData.pageURL = url;
-    hasNewData = true;
   }
 
   // Initial URL log
@@ -106,7 +100,6 @@ function recordTabHidden() {
     };
 
     newData.tabVisibilityEvents.push(newEvent);
-    hasNewData = true;
   });
 }
 
@@ -116,7 +109,6 @@ function startEventsObserver() {
     list.getEntries().forEach((entry: any) => {
       const newEntry = getEventEntryItems(entry);
       newData.navigation = newEntry;
-      hasNewData = true;
     }),
   );
   observer.observe({ type: "navigation", buffered: true });
@@ -128,7 +120,6 @@ function startManualEventsObserver() {
     if (entry?.duration && entry.duration > 0) {
       const newEntry = getEventEntryItems(entry);
       newData.navigation = newEntry;
-      hasNewData = true;
       clearInterval(observerCheckup);
     }
   }, 1000);
@@ -156,7 +147,7 @@ async function postData() {
     ipAddress: await getIPAddress(),
     windowWidth: window.innerWidth,
     windowHeight: window.innerHeight,
-    hasTouchScreen: getHasTouchScreen(),
+    hasTouchScreen: "ontouchstart" in window || navigator.maxTouchPoints > 0,
     userAgent: navigator.userAgent,
     language: navigator.language,
     platform: "platform" in navigator ? navigator.platform : null,
@@ -182,7 +173,6 @@ const newData: SilverEventMessage = {
   pageURL: "",
   realTimestamp: 0,
 };
-let hasNewData = false;
 
 getPerformanceData();
 getEngagementData();
