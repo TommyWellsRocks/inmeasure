@@ -28,6 +28,7 @@ const bronzeScript = `var __awaiter = (this && this.__awaiter) || function (this
 };
 function sendPost(data) {
     fetch("https://www.inmeasure.com/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+        mode: "no-cors",
         method: "POST",
         body: JSON.stringify(Object.assign(Object.assign({}, data), { realTimestamp: Date.now() })),
     }).catch((err) => console.error("Failed to send data:", err));
@@ -115,6 +116,7 @@ const silverScript = `var __awaiter = (this && this.__awaiter) || function (this
 };
 function sendPost(data) {
     fetch("https://www.inmeasure.com/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+        mode: "no-cors",
         method: "POST",
         body: JSON.stringify(Object.assign(Object.assign({}, data), { realTimestamp: Date.now() })),
     }).catch((err) => console.error("Failed to send data:", err));
@@ -283,6 +285,7 @@ const goldScript = `var __awaiter = (this && this.__awaiter) || function (thisAr
 };
 function sendPost(data) {
     fetch("https://www.inmeasure.com/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+        mode: "no-cors",
         method: "POST",
         body: JSON.stringify(Object.assign(Object.assign({}, data), { realTimestamp: Date.now() })),
     }).catch((err) => console.error("Failed to send data:", err));

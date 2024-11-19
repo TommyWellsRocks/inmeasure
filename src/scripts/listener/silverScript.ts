@@ -5,6 +5,7 @@ import type {
 
 function sendPost(data: BrowserMessage | SilverEventMessage) {
   fetch("https://www.inmeasure.com/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+    mode: "no-cors",
     method: "POST",
     body: JSON.stringify({ ...data, realTimestamp: Date.now() }),
   }).catch((err) => console.error("Failed to send data:", err));
