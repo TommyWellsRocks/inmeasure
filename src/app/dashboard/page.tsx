@@ -10,6 +10,7 @@ import { TotalVisitorsTable } from "~/components/dashboard/TotalVisitorsTable";
 import { SourcesTable } from "~/components/dashboard/SourcesTable";
 import { TopPagesTable } from "~/components/dashboard/TopPagesTable";
 import { useRouter } from "next/navigation";
+import { RefreshCcw } from "lucide-react";
 
 export default function Dashboard() {
   const org = useOrganization((state) => state.organization?.organization);
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [sourcesVisitors, setSourcesVisitors] = useState<
     Record<string, number>
   >({});
+  const [reloadFlag, setReloadFlag] = useState(false);
   const [connectionTimestamps, setConnectionTimestamps] = useState<number[]>(
     [],
   );
@@ -29,26 +31,28 @@ export default function Dashboard() {
         setSourcesVisitors(res.sourcesVisitors);
         setConnectionTimestamps(res.connectionTimestamps);
       });
-  }, [org]);
+  }, [org, reloadFlag]);
 
   if (!org) return router.push("/");
 
   const orgDomain = "https://" + org.domain;
 
-  // if (!userId)
-  //   return redirect(`/login?return=${encodeURIComponent("/dashboard")}`);
-
   return (
     <main className="flex flex-col gap-y-20 px-10">
-      <section className="flex flex-col gap-y-2">
-        <span className="text-xl font-semibold">{org.organizationName}</span>
-        <Link
-          href={orgDomain}
-          target="_blank"
-          className="text-sm underline underline-offset-1"
-        >
-          {orgDomain}
-        </Link>
+      <section className="flex gap-x-2 justify-between items-center">
+        <div className="flex flex-col gap-y-2">
+          <span className="text-xl font-semibold">{org.organizationName}</span>
+          <Link
+            href={orgDomain}
+            target="_blank"
+            className="text-sm underline underline-offset-1"
+          >
+            {orgDomain}
+          </Link>
+        </div>
+        <button onClick={() => setReloadFlag((state) => !state)}>
+          <RefreshCcw />
+        </button>
       </section>
 
       <section>
