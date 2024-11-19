@@ -43,7 +43,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="flex h-screen bg-zinc-950 text-white">
+      <body className="flex h-screen bg-zinc-950 text-zinc-50">
         <SetSession session={session} />
         <SetOrganizations organizations={organizations} />
         <AppSidebar session={session} />
