@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 function sendPost(data) {
-    fetch("http://localhost:3000/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
+    fetch("https://www.inmeasure.com/api/v1/listener/{{APIKEY}}/{{CONNECTIONID}}", {
         method: "POST",
         body: JSON.stringify(Object.assign(Object.assign({}, data), { realTimestamp: Date.now() })),
     }).catch((err) => console.error("Failed to send data:", err));
