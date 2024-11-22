@@ -72,7 +72,7 @@ function PlatformNav() {
 
 export function AppSidebar({ session }: { session: Session | null }) {
   return (
-    <section className="flex flex-row-reverse gap-x-2">
+    <section className="flex flex-row-reverse gap-x-2 fixed top-0 bottom-0 left-0 z-10">
       <input type="checkbox" id="toggle" className="peer hidden bg-white" />
       <label
         htmlFor="toggle"

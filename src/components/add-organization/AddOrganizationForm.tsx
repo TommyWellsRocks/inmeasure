@@ -16,21 +16,11 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import {
   addOrganization,
   isOrganizationDomain,
 } from "~/server/actions/addOrganization";
 
-import type { AnalyticsLevelType } from "~/server/types/tiers";
 import { getDomain } from "~/utils/getDomain";
-
-const tiers = ["bronze", "silver", "gold"];
 
 const formSchema = z.object({
   organizationName: z
@@ -51,9 +41,8 @@ const formSchema = z.object({
       },
       { message: "Organization already exists. Join the organization." },
     ),
-  tier: z.string().refine((t) => tiers.includes(t), {
-    message: "Organization tier must be one from the list.",
-  }),
+  standardConnections: z.coerce.number(),
+  sessionReplayConnections: z.coerce.number(),
 });
 
 export function AddOrganizationForm({ userId }: { userId: string }) {
@@ -62,7 +51,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
     defaultValues: {
       organizationName: "",
       domain: "",
-      tier: "bronze",
+      standardConnections: 10_000,
+      sessionReplayConnections: 10_000,
     },
   });
 
@@ -71,7 +61,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       userId,
       v.organizationName,
       v.domain,
-      v.tier as AnalyticsLevelType,
+      v.standardConnections,
+      v.sessionReplayConnections,
     );
   }
 
@@ -107,7 +98,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
               <FormLabel>Domain</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="inmeasure.com"
+                  placeholder="https://www.inmeasure.com"
                   {...field}
                   className="bg-zinc-900"
                 />
@@ -125,28 +116,48 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
 
         <FormField
           control={form.control}
-          name="tier"
+          name="standardConnections"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tier</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="bg-zinc-900">
-                    <SelectValue placeholder="Select a verified email to display" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="bg-zinc-900 text-zinc-50">
-                  {tiers.map((t, i) => (
-                    <SelectItem key={i} value={t}>
-                      {t}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FormLabel>Standard Connections</FormLabel>
+              <FormControl>
+                <Input
+                  inputMode="numeric"
+                  type="number"
+                  placeholder="10,000"
+                  {...field}
+                  className="bg-zinc-900"
+                />
+              </FormControl>
               <FormMessage />
+              <FormDescription>Logged site visitor cap.</FormDescription>
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="sessionReplayConnections"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Session Replay Connections</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  placeholder="10,000"
+                  {...field}
+                  className="bg-zinc-900"
+                />
+              </FormControl>
+              <FormMessage />
+              <FormDescription>
+                Logged site visitor session replay cap.
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+
         <Button type="submit">Add Organization</Button>
       </form>
     </Form>

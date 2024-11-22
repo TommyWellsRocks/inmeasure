@@ -29,14 +29,9 @@ function OrganizationOption({
       }
       className={`flex w-full items-center justify-between rounded-lg bg-zinc-800 p-2 ${hoverBG && "hover:bg-zinc-950"}`}
     >
-      <div className="flex flex-col items-start">
-        <span className="text-sm font-medium">
-          {organization.organization?.organizationName}
-        </span>
-        <span className="text-xs font-light">
-          {organization.organization?.tier}
-        </span>
-      </div>
+      <span className="flex items-start text-sm font-medium">
+        {organization.organization?.organizationName}
+      </span>
       {children}
     </div>
   );

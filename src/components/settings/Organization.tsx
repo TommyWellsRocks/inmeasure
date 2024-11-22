@@ -1,7 +1,6 @@
 "use client";
 
 import { useOrganization } from "~/hooks/useOrganization";
-import { tierSeats } from "~/server/types/tiers";
 
 import { Section } from "../Section";
 import { SectionHeader } from "../SectionHeader";
@@ -19,16 +18,14 @@ export function Organization() {
         value={org?.organizationName || "None"}
       />
 
-      <SettingsItem name="Tier" value={org?.tier || "None"} />
+      <SettingsItem name="Tier" value={"None"} />
 
       <div className="flex flex-col gap-y-0">
         <SettingsItem name="API Key" value={org?.apiKey || "None"} />
         <span className="text-xs text-zinc-400">**Do NOT Share This**</span>
       </div>
 
-      <Seats
-        tierMaxSeats={org?.tier ? tierSeats[org?.tier] : 0}
-      />
+      <Seats tierMaxSeats={0} />
     </Section>
   );
 }

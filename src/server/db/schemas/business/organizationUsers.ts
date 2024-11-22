@@ -8,8 +8,13 @@ export const organizationUsers = createTable(
   {
     organizationId: varchar("organization_id").references(
       () => organizations.id,
+      {
+        onDelete: "cascade",
+      },
     ),
-    userId: varchar("user_id").references(() => users.id),
+    userId: varchar("user_id").references(() => users.id, {
+      onDelete: "cascade",
+    }),
   },
   (table) => ({
     pk: primaryKey({ columns: [table.organizationId, table.userId] }),

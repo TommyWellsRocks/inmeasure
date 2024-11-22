@@ -1,6 +1,11 @@
-import { scripts } from "~/server/types/tiers";
 import { getDomain } from "~/utils/getDomain";
-import { authorizeAndCreateConnection } from "~/server/db/queries/scriptAPI";
+import { authorizeAndCreateConnection } from "~/server/db/queries/apis/scriptAPI";
+import {
+  sessionRecordingScript,
+  standardScript,
+  durationScript,
+} from "~/server/types/scripts";
+import { replaceOnScript } from "~/scripts/get/utils/replaceOnScript";
 
 export async function GET(
   req: Request,
@@ -12,25 +17,30 @@ export async function GET(
 
   if (origin) {
     const domain = getDomain(origin);
-    const authResponse = await authorizeAndCreateConnection(domain, apiKey);
+    const res = await authorizeAndCreateConnection(domain, apiKey);
 
-    if (authResponse) {
-      const connectionId = authResponse.connectionId;
-      let script = scripts[authResponse.organizationTier];
+    if (res) {
+      const connectionId = res.connectionId;
 
-      const replacements = {
-        "{{APIKEY}}": apiKey,
-        "{{CONNECTIONID}}": connectionId,
-      };
-      Object.entries(replacements).forEach(
-        ([placeholder, value]) =>
-          (script = script.replaceAll(placeholder, value)),
+      const theStandardScript = res.scripts.returnStandardScript
+        ? durationScript + standardScript
+        : "";
+      const theRecordingScript = res.scripts.returnRecordingScript
+        ? sessionRecordingScript
+        : "";
+
+      // ! FUNCTION AND VAR NAMES MUST BE DIFFERENT BETWEEN SCRIPTS
+      const totalScript = replaceOnScript(
+        apiKey,
+        connectionId,
+        theStandardScript + theRecordingScript,
       );
 
-      return new Response(script, {
+      return new Response(totalScript, {
         headers: { "Content-Type": "application/javascript" },
       });
     }
   }
+
   return new Response();
 }

@@ -1,8 +1,6 @@
 import "server-only";
 
 import { db } from "~/server/db";
-
-import type { AnalyticsLevelType } from "~/server/types/tiers";
 import { organizations, organizationUsers } from "../schema";
 import { getDomain } from "~/utils/getDomain";
 
@@ -10,19 +8,26 @@ export async function addOrganizationAndAssignUser(
   userId: string,
   name: string,
   domain: string,
-  tier: AnalyticsLevelType,
+  connectionLimit: number,
+  sessionRecordingLimit: number,
 ) {
   const cleanDomain = getDomain(domain);
 
   await db.transaction(async (tx) => {
     const newOrganization = await tx
       .insert(organizations)
-      .values({ domain: cleanDomain, organizationName: name, tier })
+      .values({
+        domain: cleanDomain,
+        organizationName: name,
+        connectionLimit,
+        sessionRecordingLimit,
+      })
       .returning({ id: organizations.id });
-    if (newOrganization.at(0))
+    const newOrgId = newOrganization[0]?.id;
+    if (newOrgId)
       await tx
         .insert(organizationUsers)
-        .values({ userId, organizationId: newOrganization[0]!.id });
+        .values({ userId, organizationId: newOrgId });
   });
 }
 

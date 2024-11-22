@@ -1,10 +1,10 @@
 /** @type {import("eslint").Linter.Config} */
 const config = {
   ignorePatterns: [
-    "bronzeScript.js",
-    "silverScript.js",
-    "goldScript.js",
     "copyScript.js",
+    "recordDuration.js",
+    "recordStandard.js",
+    "recordSession.js",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {

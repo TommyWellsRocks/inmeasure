@@ -1,4 +1,4 @@
-import { copyScript } from "~/server/types/tiers";
+import { copyScript } from "~/server/types/scripts";
 import { ScriptSection } from "./ScriptSection";
 
 export async function CopyScript() {

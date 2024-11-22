@@ -5,15 +5,21 @@ import {
   addOrganizationAndAssignUser,
   isExistingDomain,
 } from "../db/queries/addOrganization";
-import type { AnalyticsLevelType } from "../types/tiers";
 
 export async function addOrganization(
   userId: string,
   name: string,
   domain: string,
-  tier: AnalyticsLevelType,
+  connectionLimit: number,
+  sessionRecordingLimit: number,
 ) {
-  await addOrganizationAndAssignUser(userId, name, domain, tier);
+  await addOrganizationAndAssignUser(
+    userId,
+    name,
+    domain,
+    connectionLimit,
+    sessionRecordingLimit,
+  );
   return redirect("/");
 }
 

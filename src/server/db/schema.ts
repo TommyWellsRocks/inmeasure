@@ -27,71 +27,58 @@ export { verificationTokens } from "~/server/db/schemas/common/verificationToken
 export {
   organizations,
   organizationRelations,
-  tierEnum,
 } from "~/server/db/schemas/business/organizations";
 export {
   organizationUsers,
   organizationUserRelations,
 } from "~/server/db/schemas/business/organizationUsers";
 
+// Totals (automatic. Don't write.)
+export {
+  totalsTable,
+  totalsTableRelations,
+} from "~/server/db/schemas/analyticsTables/totals";
+
 // General Entries
 export {
   connectionEntries,
   connectionRelations,
-} from "~/server/db/schemas/generalEntries/connectionEntries";
+} from "~/server/db/schemas/analyticsTables/connectionEntries";
 export {
-  browserEntries,
-  browserEntryRelations,
-} from "~/server/db/schemas/generalEntries/browserEntries";
+  standardMessages,
+  standardMessageRelations,
+} from "~/server/db/schemas/analyticsTables/standardMessages";
 export {
-  heartbeatEntries,
-  heartbeatRelations,
-} from "~/server/db/schemas/generalEntries/heartbeatEntries";
+  durationMessages,
+  durationMessageRelations,
+} from "~/server/db/schemas/analyticsTables/durationMessages";
+export {
+  pageURLEntries,
+  pageURLEventRelations,
+} from "~/server/db/schemas/analyticsTables/pageURLEntries";
 
 // Engagement Entries
 export {
   clickEventEntries,
   clickEventRelations,
-} from "~/server/db/schemas/engagementEntries/clickEventEntries";
+} from "~/server/db/schemas/analyticsTables/recordingTables/clickEventEntries";
 export {
   keyEventEntries,
   keyEventRelations,
-} from "~/server/db/schemas/engagementEntries/keyEventEntries";
+} from "~/server/db/schemas/analyticsTables/recordingTables/keyEventEntries";
 export {
   mouseMoveEntries,
   mouseMoveRelations,
-} from "~/server/db/schemas/engagementEntries/mouseMoveEntries";
+} from "~/server/db/schemas/analyticsTables/recordingTables/mouseMoveEntries";
 export {
   resizeEventEntries,
   resizeEventRelations,
-} from "~/server/db/schemas/engagementEntries/resizeEventEntries";
+} from "~/server/db/schemas/analyticsTables/recordingTables/resizeEventEntries";
 export {
   scrollEventEntries,
   scrollEventRelations,
-} from "~/server/db/schemas/engagementEntries/scrollEventEntries";
+} from "~/server/db/schemas/analyticsTables/recordingTables/scrollEventEntries";
 export {
   tabVisibilityEntries,
   tabVisibilityRelations,
-} from "~/server/db/schemas/engagementEntries/tabVisibilityEntries";
-
-// Performance Entries
-export {
-  largestContentfulPaintEntries,
-  largestContentfulPaintRelations,
-} from "~/server/db/schemas/performanceEntries/largestContentfulPaintEntries";
-export {
-  layoutShiftEntries,
-  layoutShiftRelations,
-} from "~/server/db/schemas/performanceEntries/layoutShiftEntries";
-export {
-  navigationEntries,
-  navigationRelations,
-} from "~/server/db/schemas/performanceEntries/navigationEntries";
-export {
-  paintEntries,
-  paintRelations,
-} from "~/server/db/schemas/performanceEntries/paintEntries";
-export {
-  resourceEntries,
-  resourceRelations,
-} from "~/server/db/schemas/performanceEntries/resourceEntries";
+} from "~/server/db/schemas/analyticsTables/recordingTables/tabVisibilityEntries";
