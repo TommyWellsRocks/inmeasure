@@ -34,7 +34,7 @@ export default async function RootLayout({
     organizations = await getUserOrganizations(userId);
   }
 
-  const cpyScript = replaceOnScript("test123456789", "", copyScript);
+  const cpyScript = replaceOnScript("a8fab9b1-0bfb-4a61-ad31-6f3a54e15804", "", copyScript);
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>

@@ -13,7 +13,6 @@ export async function POST(
 
   if (origin) {
     const domain = getDomain(origin);
-    console.log(data)
     await authorizeAndWriteMessage(data, domain, apiKey, connectionId);
   }
 
