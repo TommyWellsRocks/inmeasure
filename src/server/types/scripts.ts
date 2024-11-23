@@ -3,7 +3,7 @@ export const copyScript = `(function () {
     const element = document.createElement("script");
     element.type = "text/javascript";
     element.async = true;
-    element.src = "http://localhost:3000/api/v1/script/{{APIKEY}}";
+    element.src = "https://www.inmeasure.com/api/v1/script/{{APIKEY}}";
     element.id = "im-script";
     document.head.appendChild(element);
   }
