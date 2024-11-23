@@ -22,6 +22,8 @@ export async function GET(
       const script = returnScriptMap[res.scriptType];
       const totalScript = replaceOnScript(apiKey, connectionId, script);
 
+      console.log(`Sending scriptType: ${res.scriptType}. Domain: ${domain}`);
+
       return new Response(totalScript, {
         headers: { "Content-Type": "application/javascript" },
       });
