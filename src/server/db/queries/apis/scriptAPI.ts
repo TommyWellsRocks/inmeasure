@@ -1,13 +1,15 @@
 import "server-only";
 
 import { db } from "~/server/db";
-import { connectionEntries } from "../../schema";
+import { connectionEntries, totalsTable } from "../../schema";
 import type { ReturnScript } from "~/server/types/scripts";
+import { sql } from "drizzle-orm";
 
 export async function authorizeAndCreateConnection(
   domain: string,
   apiKey: string,
 ) {
+  const currentYearMonth = `${new Date().getUTCFullYear()}, ${new Date().getUTCMonth() + 1}`;
   const authResponse = await db.transaction(async (tx) => {
     // GetOrganization
     const org = await tx.query.organizations.findFirst({
@@ -24,8 +26,7 @@ export async function authorizeAndCreateConnection(
             standardScriptsSent: true,
             playbackScriptsSent: true,
           },
-          where: (model, { sql }) =>
-            sql`${model.month} = date_trunc('month', CURRENT_DATE)`,
+          where: (model, { eq }) => eq(model.yearAndMonth, currentYearMonth),
           limit: 1,
         },
       },
@@ -51,10 +52,57 @@ export async function authorizeAndCreateConnection(
         monthlyPlaybackScriptSent < org.playbackScriptLimit &&
         monthlyStandardScriptSent < org.standardScriptLimit
       ) {
+        await tx
+          .insert(totalsTable)
+          .values({
+            organizationId: org.id,
+            yearAndMonth: currentYearMonth,
+            connections: 1,
+            standardScriptsSent: 1,
+            playbackScriptsSent: 1,
+          })
+          .onConflictDoUpdate({
+            target: [totalsTable.organizationId, totalsTable.yearAndMonth],
+            set: {
+              connections: sql`${totalsTable.connections} + 1`,
+              standardScriptsSent: sql`${totalsTable.standardScriptsSent} + 1`,
+              playbackScriptsSent: sql`${totalsTable.playbackScriptsSent} + 1`,
+            },
+          });
         scriptType = "standardAndPlaybackScript";
       } else if (monthlyPlaybackScriptSent < org.playbackScriptLimit) {
+        await tx
+          .insert(totalsTable)
+          .values({
+            organizationId: org.id,
+            yearAndMonth: currentYearMonth,
+            connections: 1,
+            playbackScriptsSent: 1,
+          })
+          .onConflictDoUpdate({
+            target: [totalsTable.organizationId, totalsTable.yearAndMonth],
+            set: {
+              connections: sql`${totalsTable.connections} + 1`,
+              playbackScriptsSent: sql`${totalsTable.playbackScriptsSent} + 1`,
+            },
+          });
         scriptType = "playbackScript";
       } else if (monthlyStandardScriptSent < org.standardScriptLimit) {
+        await tx
+          .insert(totalsTable)
+          .values({
+            organizationId: org.id,
+            yearAndMonth: currentYearMonth,
+            connections: 1,
+            standardScriptsSent: 1,
+          })
+          .onConflictDoUpdate({
+            target: [totalsTable.organizationId, totalsTable.yearAndMonth],
+            set: {
+              connections: sql`${totalsTable.connections} + 1`,
+              standardScriptsSent: sql`${totalsTable.standardScriptsSent} + 1`,
+            },
+          });
         scriptType = "standardScript";
       }
 

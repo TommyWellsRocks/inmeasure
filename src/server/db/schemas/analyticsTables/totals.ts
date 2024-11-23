@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
-import { index, varchar, bigint, primaryKey, date } from "drizzle-orm/pg-core";
+import { index, varchar, bigint, primaryKey } from "drizzle-orm/pg-core";
 import { organizations } from "~/server/db/schema";
 
 export const totalsTable = createTable(
@@ -11,7 +11,11 @@ export const totalsTable = createTable(
         onDelete: "cascade",
       })
       .notNull(),
-    month: date("month").notNull(),
+    yearAndMonth: varchar("year_month")
+      .notNull()
+      .default(
+        `${new Date().getUTCFullYear()}, ${new Date().getUTCMonth() + 1}`,
+      ),
     connections: bigint("total_connections", { mode: "number" })
       .notNull()
       .default(0),
@@ -27,7 +31,7 @@ export const totalsTable = createTable(
       .default(0),
   },
   (table) => ({
-    pk: primaryKey({ columns: [table.organizationId, table.month] }),
+    pk: primaryKey({ columns: [table.organizationId, table.yearAndMonth] }),
     organizationIndex: index().on(table.organizationId),
   }),
 );
