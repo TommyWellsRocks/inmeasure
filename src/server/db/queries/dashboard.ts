@@ -35,7 +35,9 @@ export async function getDashboardData(organizationId: string) {
       }
     });
     // Connection latest timestamp
-    connectionTimestamps.push(connection.durationMessages[0]!.timestamp);
+    connectionTimestamps.push(
+      connection.durationMessages[0]?.timestamp || Date.now(),
+    );
   });
 
   return { pageVisitors, sourcesVisitors, connectionTimestamps };
