@@ -24,8 +24,11 @@ export async function getDashboardData(organizationId: string) {
   // page1 -> page2 -> page1 = [page1, page2]
   allConnections.forEach((connection) => {
     const source = connection.standardMessage?.source || "Direct / Search";
+    // Delete baseUrl and anchorID on pagesVisited
     const pagesVisited = new Set(
-      connection.pageURLMessages.map((entry) => entry.pageURL),
+      connection.pageURLMessages.map(
+        (entry) => new URL(entry.pageURL).pathname,
+      ),
     );
 
     sourcesVisitors[source] = (sourcesVisitors[source] || 0) + 1;
@@ -35,9 +38,10 @@ export async function getDashboardData(organizationId: string) {
       }
     });
 
-    const latestDurationMessage = connection.durationMessages[0];
-    if (latestDurationMessage)
-      connectionTimestamps.push(latestDurationMessage.timestamp);
+    // Only wont have a durationMessage for the most recent (currently active) for some reason
+    const latestDurationMessageTimestamp =
+      connection.durationMessages[0]?.timestamp || Date.now();
+    connectionTimestamps.push(latestDurationMessageTimestamp);
   });
 
   return { pageVisitors, sourcesVisitors, connectionTimestamps };
