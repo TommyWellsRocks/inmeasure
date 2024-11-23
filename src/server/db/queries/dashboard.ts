@@ -25,7 +25,7 @@ export async function getDashboardData(organizationId: string) {
   allConnections.forEach((connection) => {
     const source = connection.standardMessage?.source || "Direct / Search";
     const pagesVisited = new Set(
-      ...connection.pageURLMessages.map((entry) => entry.pageURL),
+      connection.pageURLMessages.map((entry) => entry.pageURL),
     );
 
     sourcesVisitors[source] = (sourcesVisitors[source] || 0) + 1;
@@ -34,10 +34,10 @@ export async function getDashboardData(organizationId: string) {
         pageVisitors[visitedPage] = (pageVisitors[visitedPage] || 0) + 1;
       }
     });
-    // Connection latest timestamp
-    connectionTimestamps.push(
-      connection.durationMessages[0]?.timestamp || Date.now(),
-    );
+
+    const latestDurationMessage = connection.durationMessages[0];
+    if (latestDurationMessage)
+      connectionTimestamps.push(latestDurationMessage.timestamp);
   });
 
   return { pageVisitors, sourcesVisitors, connectionTimestamps };
