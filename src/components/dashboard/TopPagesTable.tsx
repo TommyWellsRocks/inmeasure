@@ -7,7 +7,8 @@ export function TopPagesTable({
 }) {
   const topPages = Object.entries(pageVisitors)
     .map(([pageURL, count]) => {
-      const url = pageURL.replace("http://localhost:3000", "");
+    // Delete baseUrl and anchorID on pagesVisited
+      const url = new URL(pageURL).pathname;
       return {
         col1: url,
         col2: count,
