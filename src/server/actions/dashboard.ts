@@ -1,7 +1,7 @@
 "use server";
 
-import { getDashboardData } from "../db/queries/dashboard";
+import { getTheDashboardData } from "../db/queries/dashboard";
 
-export async function getSourcesAndPagesCount(organizationId: string) {
-  return await getDashboardData(organizationId);
+export async function getDashboardData(organizationId: string) {
+  return await getTheDashboardData(organizationId);
 }

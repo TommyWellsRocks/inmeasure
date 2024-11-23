@@ -1,11 +1,11 @@
 import { BiTable } from "./BiTable";
 
 export function SourcesTable({
-  sourcesVisitors,
+  sourceToVisitors,
 }: {
-  sourcesVisitors: Record<string, number>;
+  sourceToVisitors: Record<string, number>;
 }) {
-  const topSources = Object.entries(sourcesVisitors)
+  const topSources = Object.entries(sourceToVisitors)
     .map(([source, count]) => ({
       col1: source,
       col2: count,

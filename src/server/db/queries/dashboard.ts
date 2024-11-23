@@ -2,9 +2,9 @@ import "server-only";
 
 import { db } from "~/server/db";
 
-export async function getDashboardData(organizationId: string) {
-  const allConnections = await db.query.connectionEntries.findMany({
-    columns: { connectionId: true },
+export async function getTheDashboardData(organizationId: string) {
+  return await db.query.connectionEntries.findMany({
+    columns: { connectionId: true, timestamp: true },
     where: (model, { eq }) => eq(model.organizationId, organizationId),
     with: {
       standardMessage: { columns: { source: true } },
@@ -16,33 +16,4 @@ export async function getDashboardData(organizationId: string) {
       },
     },
   });
-  const sourcesVisitors: Record<string, number> = {};
-  const pageVisitors: Record<string, number> = {};
-  const connectionTimestamps: number[] = [];
-
-  // For each connection, get the pages visited, and source
-  // page1 -> page2 -> page1 = [page1, page2]
-  allConnections.forEach((connection) => {
-    const source = connection.standardMessage?.source || "Direct / Search";
-    // Delete baseUrl and anchorID on pagesVisited
-    const pagesVisited = new Set(
-      connection.pageURLMessages.map(
-        (entry) => new URL(entry.pageURL).pathname,
-      ),
-    );
-
-    sourcesVisitors[source] = (sourcesVisitors[source] || 0) + 1;
-    pagesVisited.forEach((visitedPage) => {
-      if (visitedPage) {
-        pageVisitors[visitedPage] = (pageVisitors[visitedPage] || 0) + 1;
-      }
-    });
-
-    // Only wont have a durationMessage for the most recent (currently active) for some reason
-    const latestDurationMessageTimestamp =
-      connection.durationMessages[0]?.timestamp || Date.now();
-    connectionTimestamps.push(latestDurationMessageTimestamp);
-  });
-
-  return { pageVisitors, sourcesVisitors, connectionTimestamps };
 }
