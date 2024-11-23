@@ -2,9 +2,9 @@
 const config = {
   ignorePatterns: [
     "copyScript.js",
-    "recordDuration.js",
-    "recordStandard.js",
-    "recordSession.js",
+    "playbackScript.js",
+    "standardScript.js",
+    "standardAndPlaybackScript.js",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {

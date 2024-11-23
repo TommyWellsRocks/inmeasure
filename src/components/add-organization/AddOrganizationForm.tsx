@@ -41,8 +41,8 @@ const formSchema = z.object({
       },
       { message: "Organization already exists. Join the organization." },
     ),
-  standardConnections: z.coerce.number(),
-  sessionReplayConnections: z.coerce.number(),
+  standardScriptLimit: z.coerce.number(),
+  playbackScriptLimit: z.coerce.number(),
 });
 
 export function AddOrganizationForm({ userId }: { userId: string }) {
@@ -51,8 +51,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
     defaultValues: {
       organizationName: "",
       domain: "",
-      standardConnections: 10_000,
-      sessionReplayConnections: 10_000,
+      standardScriptLimit: 10_000,
+      playbackScriptLimit: 10_000,
     },
   });
 
@@ -61,8 +61,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       userId,
       v.organizationName,
       v.domain,
-      v.standardConnections,
-      v.sessionReplayConnections,
+      v.standardScriptLimit,
+      v.playbackScriptLimit,
     );
   }
 
@@ -116,7 +116,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
 
         <FormField
           control={form.control}
-          name="standardConnections"
+          name="standardScriptLimit"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Standard Connections</FormLabel>
@@ -137,7 +137,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
 
         <FormField
           control={form.control}
-          name="sessionReplayConnections"
+          name="playbackScriptLimit"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Session Replay Connections</FormLabel>

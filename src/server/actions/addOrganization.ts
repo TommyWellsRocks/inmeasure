@@ -10,15 +10,15 @@ export async function addOrganization(
   userId: string,
   name: string,
   domain: string,
-  connectionLimit: number,
-  sessionRecordingLimit: number,
+  standardScriptLimit: number,
+  playbackScriptLimit: number,
 ) {
   await addOrganizationAndAssignUser(
     userId,
     name,
     domain,
-    connectionLimit,
-    sessionRecordingLimit,
+    standardScriptLimit,
+    playbackScriptLimit,
   );
   return redirect("/");
 }

@@ -15,15 +15,14 @@ export const totalsTable = createTable(
     connections: bigint("total_connections", { mode: "number" })
       .notNull()
       .default(0),
-    standardConnectionScriptsSent: bigint("total_connection_scripts_sent", {
+    standardScriptsSent: bigint("total_standard_scripts_sent", {
       mode: "number",
     })
       .notNull()
       .default(0),
-    sessionRecordingScriptsSent: bigint(
-      "total_session_recording_scripts_sent",
-      { mode: "number" },
-    )
+    playbackScriptsSent: bigint("total_playback_scripts_sent", {
+      mode: "number",
+    })
       .notNull()
       .default(0),
   },

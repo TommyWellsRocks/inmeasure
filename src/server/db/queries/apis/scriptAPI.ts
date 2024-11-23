@@ -2,6 +2,7 @@ import "server-only";
 
 import { db } from "~/server/db";
 import { connectionEntries } from "../../schema";
+import type { ReturnScript } from "~/server/types/scripts";
 
 export async function authorizeAndCreateConnection(
   domain: string,
@@ -10,14 +11,18 @@ export async function authorizeAndCreateConnection(
   const authResponse = await db.transaction(async (tx) => {
     // GetOrganization
     const org = await tx.query.organizations.findFirst({
-      columns: { id: true, connectionLimit: true, sessionRecordingLimit: true },
+      columns: {
+        id: true,
+        standardScriptLimit: true,
+        playbackScriptLimit: true,
+      },
       where: (model, { and, eq }) =>
         and(eq(model.apiKey, apiKey), eq(model.domain, domain)),
       with: {
         totals: {
           columns: {
-            standardConnectionScriptsSent: true,
-            sessionRecordingScriptsSent: true,
+            standardScriptsSent: true,
+            playbackScriptsSent: true,
           },
           where: (model, { sql }) =>
             sql`${model.month} = date_trunc('month', CURRENT_DATE)`,
@@ -35,21 +40,25 @@ export async function authorizeAndCreateConnection(
         .returning({ connectionId: connectionEntries.connectionId });
 
       const connectionEntry = newConnectionEntries.at(0)!;
-      const orgTotals = org.totals?.at(0) ? org.totals[0] : null;
+      const orgTotals = org.totals[0] ? org.totals[0] : null;
       const connectionId = connectionEntry.connectionId;
-      const returnStandardScript =
-        !orgTotals ||
-        orgTotals.standardConnectionScriptsSent < org.connectionLimit;
-      const returnRecordingScript =
-        !orgTotals ||
-        orgTotals.sessionRecordingScriptsSent < org.sessionRecordingLimit;
 
-      const scripts = {
-        returnStandardScript,
-        returnRecordingScript,
-      };
+      let scriptType: ReturnScript | null = null;
+      const monthlyStandardScriptSent = orgTotals?.standardScriptsSent || 0;
+      const monthlyPlaybackScriptSent = orgTotals?.playbackScriptsSent || 0;
 
-      return { scripts, connectionId };
+      if (
+        monthlyPlaybackScriptSent < org.playbackScriptLimit &&
+        monthlyStandardScriptSent < org.standardScriptLimit
+      ) {
+        scriptType = "standardAndPlaybackScript";
+      } else if (monthlyPlaybackScriptSent < org.playbackScriptLimit) {
+        scriptType = "playbackScript";
+      } else if (monthlyStandardScriptSent < org.standardScriptLimit) {
+        scriptType = "standardScript";
+      }
+
+      return { scriptType, connectionId };
     }
   });
 

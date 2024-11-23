@@ -19,12 +19,16 @@ export const organizations = createTable(
     apiKey: varchar("apiKey")
       .notNull()
       .$defaultFn(() => crypto.randomUUID()),
-    connectionLimit: bigint("connection_limit", {
+    standardScriptLimit: bigint("standard_script_limit", {
       mode: "number",
-    }).notNull(),
-    sessionRecordingLimit: bigint("session_recording_limit", {
+    })
+      .notNull()
+      .default(0),
+    playbackScriptLimit: bigint("playback_script_limit", {
       mode: "number",
-    }).notNull(),
+    })
+      .notNull()
+      .default(0),
   },
   (table) => ({
     idIndex: index().on(table.id),
