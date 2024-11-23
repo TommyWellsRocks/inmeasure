@@ -137,9 +137,9 @@ async function inMeasure() {
       });
     }
 
-    function getTimeToFirstInteraction(): Promise<number | null> {
+    function getTimeToFirstInteraction(): Promise<number> {
       const events = ["mousemove", "scroll", "click", "keydown"];
-      let firstEventTimestamp: null | number = null;
+      let firstEventTimestamp = 0;
 
       return new Promise((resolve) => {
         function onEvent(e: Event) {

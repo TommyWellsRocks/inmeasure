@@ -225,7 +225,7 @@ function inMeasure() {
                 }
                 function getTimeToFirstInteraction() {
                     var events = ["mousemove", "scroll", "click", "keydown"];
-                    var firstEventTimestamp = null;
+                    var firstEventTimestamp = 0;
                     return new Promise(function (resolve) {
                         function onEvent(e) {
                             if (!firstEventTimestamp) {
