@@ -11,24 +11,36 @@ export async function GET(
   const apiKey = params.apiKey;
   const origin = req.headers.get("referer");
 
+  let status = 200;
+  let statusText = "";
+
   if (origin) {
     const domain = getDomain(origin);
-    const res = await authorizeAndCreateConnection(domain, apiKey);
+    const { res, responseStatus, responseMessage } =
+      await authorizeAndCreateConnection(domain, apiKey);
+    status = responseStatus;
+    statusText = responseMessage;
 
     if (res) {
       const connectionId = res.connectionId;
-      if (!res.scriptType) return new Response();
+      if (!res.scriptType) {
+        statusText = "Limits Reached.";
+      } else {
+        const script = returnScriptMap[res.scriptType];
+        const totalScript = replaceOnScript(apiKey, connectionId, script);
 
-      const script = returnScriptMap[res.scriptType];
-      const totalScript = replaceOnScript(apiKey, connectionId, script);
+        console.log(`Send Script To Domain: ${domain}.`);
 
-      console.log(`Sending scriptType: ${res.scriptType}. Domain: ${domain}`);
-
-      return new Response(totalScript, {
-        headers: { "Content-Type": "application/javascript" },
-      });
+        return new Response(totalScript, {
+          headers: { "Content-Type": "application/javascript" },
+        });
+      }
     }
+  } else {
+    console.warn(`ScriptAPI - No Origin Error - APIKEY: ${apiKey}.`);
+    status = 400;
+    statusText = "No Origin.";
   }
 
-  return new Response();
+  return new Response(undefined, { status, statusText });
 }
