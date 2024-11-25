@@ -34,7 +34,7 @@ export function Organization() {
       />
 
       <Seats
-        maxSeats={org && org.seatsLimit === 0 ? Infinity : org?.seatsLimit || 0}
+        maxSeats={org?.seatsLimit === 0 ? Infinity : org?.seatsLimit || 0}
       />
     </Section>
   );

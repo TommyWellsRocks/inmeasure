@@ -21,6 +21,14 @@ import {
 } from "~/server/actions/addOrganization";
 
 import { getDomain } from "~/utils/getDomain";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import Link from "next/link";
 
 const formSchema = z.object({
   organizationName: z
@@ -53,7 +61,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       organizationName: "",
       domain: "",
       standardScriptLimit: 10_000,
-      playbackScriptLimit: 10_000,
+      playbackScriptLimit: 1_000,
       seatsLimit: 1,
     },
   });
@@ -92,7 +100,6 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="domain"
@@ -116,7 +123,6 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="standardScriptLimit"
@@ -137,7 +143,6 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="playbackScriptLimit"
@@ -148,7 +153,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
                 <Input
                   type="number"
                   inputMode="numeric"
-                  placeholder="10,000"
+                  placeholder="1,000"
                   {...field}
                   className="bg-zinc-900"
                 />
@@ -161,6 +166,36 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="seatsLimit"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Seat Limit</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue="1">
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="1" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="1">1</SelectItem>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="0">Unlimited</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                You can manage seats in your{" "}
+                <Link href="/settings#organization" className="underline">
+                  organization settings
+                </Link>
+                .
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit">Add Organization</Button>
       </form>
     </Form>
