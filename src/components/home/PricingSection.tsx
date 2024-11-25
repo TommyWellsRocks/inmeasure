@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { commafyNums } from "~/utils/commafyNums";
-import { getReplayPrice, getWebAnalyticsPrice } from "~/utils/pricingFunctions";
+import {
+  getReplayPrice,
+  getStandardAnalyticsPrice,
+} from "~/utils/pricingFunctions";
 
 // Seats
 // 1 (Free)
@@ -16,11 +19,11 @@ function PriceItem({
   priceSetter,
   priceFunc,
 }: {
-  name: "Web Analytics" | "Session Recordings";
+  name: "Standard Analytics" | "Session Recordings";
   defaultItemCount: number;
   priceSetter: React.Dispatch<
     React.SetStateAction<{
-      "Web Analytics": number;
+      "Standard Analytics": number;
       "Session Recordings": number;
     }>
   >;
@@ -47,10 +50,12 @@ function PriceItem({
 }
 
 export function PricingSection() {
-  const DEFAULT_WEB_ANALYTICS_COUNT = 10_000;
+  const DEFAULT_STANDARD_ANALYTICS_COUNT = 10_000;
   const DEFAULT_REPLAY_COUNT = 1_000;
   const [priceTable, setPriceTable] = useState({
-    "Web Analytics": getWebAnalyticsPrice(DEFAULT_WEB_ANALYTICS_COUNT),
+    "Standard Analytics": getStandardAnalyticsPrice(
+      DEFAULT_STANDARD_ANALYTICS_COUNT,
+    ),
     "Session Recordings": getReplayPrice(DEFAULT_REPLAY_COUNT),
   });
 
@@ -66,10 +71,10 @@ export function PricingSection() {
       <span className="text-3xl font-semibold">Pricing</span>
       <div className="ml-4 flex w-full flex-col gap-y-2">
         <PriceItem
-          name="Web Analytics"
-          defaultItemCount={DEFAULT_WEB_ANALYTICS_COUNT}
+          name="Standard Analytics"
+          defaultItemCount={DEFAULT_STANDARD_ANALYTICS_COUNT}
           priceSetter={setPriceTable}
-          priceFunc={getWebAnalyticsPrice}
+          priceFunc={getStandardAnalyticsPrice}
         />
         <PriceItem
           name="Session Recordings"

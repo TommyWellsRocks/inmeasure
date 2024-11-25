@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const items = [
   {
-    feature: "Web Analytics",
+    feature: "Standard Analytics",
     simplyPut: "Visitor Info",
     description:
       "Record info about the user. Such as traffic source, pages visited, duration of visit and much more.",

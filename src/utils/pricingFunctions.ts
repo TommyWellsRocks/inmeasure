@@ -1,4 +1,4 @@
-export function getWebAnalyticsPrice(visitorCount: number) {
+export function getStandardAnalyticsPrice(visitorCount: number) {
   let price = 0;
   if (visitorCount < 10_000) {
     price = visitorCount * 0.006;
