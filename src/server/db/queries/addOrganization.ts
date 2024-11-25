@@ -10,6 +10,7 @@ export async function addOrganizationAndAssignUser(
   domain: string,
   standardScriptLimit: number,
   playbackScriptLimit: number,
+  seatsLimit: number,
 ) {
   const cleanDomain = getDomain(domain);
 
@@ -21,6 +22,7 @@ export async function addOrganizationAndAssignUser(
         organizationName: name,
         standardScriptLimit,
         playbackScriptLimit,
+        seatsLimit,
       })
       .returning({ id: organizations.id });
     const newOrgId = newOrganization[0]?.id;

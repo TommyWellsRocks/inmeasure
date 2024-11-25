@@ -43,6 +43,7 @@ const formSchema = z.object({
     ),
   standardScriptLimit: z.coerce.number(),
   playbackScriptLimit: z.coerce.number(),
+  seatsLimit: z.coerce.number(),
 });
 
 export function AddOrganizationForm({ userId }: { userId: string }) {
@@ -53,6 +54,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       domain: "",
       standardScriptLimit: 10_000,
       playbackScriptLimit: 10_000,
+      seatsLimit: 1,
     },
   });
 
@@ -63,6 +65,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       v.domain,
       v.standardScriptLimit,
       v.playbackScriptLimit,
+      v.seatsLimit,
     );
   }
 

@@ -7,7 +7,7 @@ import { SettingsItem } from "./SettingsItem";
 import { Trash2 } from "lucide-react";
 import { AddSeatUserButton } from "./AddSeatUserButton";
 
-export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
+export function Seats({ maxSeats }: { maxSeats: number }) {
   const session = useSession((state) => state.session);
   const organization = useOrganization((state) => state.organization);
   const removeOrganizationUser = useOrganization(
@@ -17,28 +17,21 @@ export function Seats({ tierMaxSeats }: { tierMaxSeats: number }) {
   const userId = session?.user?.id;
   const users = organization?.organization?.users;
   const userCount = users?.length || 0;
-  const hasSeatsAvailable = userCount < tierMaxSeats;
+  const hasSeatsAvailable = userCount < maxSeats;
   return (
     <div className="flex flex-col items-start gap-y-2">
-      <SettingsItem
-        name="Seats"
-        value={`${userCount} / ${tierMaxSeats}`}
-      />
+      <SettingsItem name="Seats" value={`${userCount} / ${maxSeats}`} />
 
       <div className="flex flex-col gap-y-2">
         <div className="flex gap-x-5 rounded-md bg-zinc-800 p-2 text-sm">
           <div className="flex flex-col gap-y-2">
             <span className="text-base font-medium">Name</span>
-            {users?.map((user, i) => (
-              <span key={i}>{user.user?.name}</span>
-            ))}
+            {users?.map((user, i) => <span key={i}>{user.user?.name}</span>)}
           </div>
 
           <div className="flex flex-col gap-y-2">
             <span className="text-base font-medium">Email</span>
-            {users?.map((user, i) => (
-              <span key={i}>{user.user?.email}</span>
-            ))}
+            {users?.map((user, i) => <span key={i}>{user.user?.email}</span>)}
           </div>
 
           <div className="flex flex-col gap-y-2">

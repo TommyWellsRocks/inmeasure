@@ -18,14 +18,24 @@ export function Organization() {
         value={org?.organizationName || "None"}
       />
 
-      <SettingsItem name="Tier" value={"None"} />
-
       <div className="flex flex-col gap-y-0">
         <SettingsItem name="API Key" value={org?.apiKey || "None"} />
         <span className="text-xs text-zinc-400">**Do NOT Share This**</span>
       </div>
 
-      <Seats tierMaxSeats={0} />
+      <SettingsItem
+        name="Standard Analytics Recording Limit"
+        value={String(org?.standardScriptLimit) || "None"}
+      />
+
+      <SettingsItem
+        name="Playback Recording Limit"
+        value={String(org?.playbackScriptLimit) || "None"}
+      />
+
+      <Seats
+        maxSeats={org && org.seatsLimit === 0 ? Infinity : org?.seatsLimit || 0}
+      />
     </Section>
   );
 }

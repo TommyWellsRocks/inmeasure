@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
-import { bigint, index, varchar } from "drizzle-orm/pg-core";
+import { bigint, index, integer, varchar } from "drizzle-orm/pg-core";
 import {
   organizationUsers,
   connectionEntries,
@@ -29,6 +29,7 @@ export const organizations = createTable(
     })
       .notNull()
       .default(0),
+    seatsLimit: integer("seats_limit").notNull().default(1),
   },
   (table) => ({
     idIndex: index().on(table.id),

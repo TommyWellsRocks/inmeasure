@@ -12,6 +12,7 @@ export async function addOrganization(
   domain: string,
   standardScriptLimit: number,
   playbackScriptLimit: number,
+  seatsLimit: number,
 ) {
   await addOrganizationAndAssignUser(
     userId,
@@ -19,6 +20,7 @@ export async function addOrganization(
     domain,
     standardScriptLimit,
     playbackScriptLimit,
+    seatsLimit,
   );
   return redirect("/");
 }
