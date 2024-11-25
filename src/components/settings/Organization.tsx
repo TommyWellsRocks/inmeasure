@@ -33,6 +33,8 @@ export function Organization() {
         value={String(org?.playbackScriptLimit) || "None"}
       />
 
+      <SettingsItem name="Analytics History" value="7 Years" />
+
       <Seats
         maxSeats={org?.seatsLimit === 0 ? Infinity : org?.seatsLimit || 0}
       />
