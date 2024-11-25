@@ -19,77 +19,135 @@ export async function authorizeAndWriteMessage(
   apiKey: string,
   connectionId: string,
 ) {
+  const response = { responseStatus: 201, responseMessage: "" };
   await db.transaction(async (dbPen) => {
     // Get the organizationId where isOrganization and isConnectionId
-    const organization = await getOrg(dbPen, domain, apiKey, connectionId);
+    const organization = await getOrg(
+      dbPen,
+      domain,
+      apiKey,
+      connectionId,
+    ).catch((err) => {
+      console.error(
+        `RecordingAPI - getOrg Authorization Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+      );
+      response.responseStatus = 500;
+    });
 
     const organizationId = organization?.id;
     if (organizationId) {
       // Click
-      const click = data.clickEvents.map((entry) =>
-        dbPen.insert(clickEventEntries).values({
-          ...entry,
-          connectionId,
-          organizationId,
-          perfTimestamp: String(entry.perfTimestamp),
-        }),
-      );
+      const clickMessages = data.clickEvents.map((entry) => ({
+        ...entry,
+        connectionId,
+        organizationId,
+        perfTimestamp: String(entry.perfTimestamp),
+      }));
+      const click = dbPen
+        .insert(clickEventEntries)
+        .values(clickMessages)
+        .catch((err) => {
+          console.error(
+            `RecordingAPI - Insert ClickEvent Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+          );
+          response.responseStatus = 500;
+        });
+
       // Key
-      const key = data.keyEvents.map((entry) =>
-        dbPen.insert(keyEventEntries).values({
-          ...entry,
-          connectionId,
-          organizationId,
-          perfTimestamp: String(entry.perfTimestamp),
-        }),
-      );
+      const keyMessages = data.keyEvents.map((entry) => ({
+        ...entry,
+        connectionId,
+        organizationId,
+        perfTimestamp: String(entry.perfTimestamp),
+      }));
+      const key = dbPen
+        .insert(keyEventEntries)
+        .values(keyMessages)
+        .catch((err) => {
+          console.error(
+            `RecordingAPI - Insert KeyEvent Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+          );
+          response.responseStatus = 500;
+        });
+
       // Mouse
-      const mouse = data.mouseMoveEvents.map((entry) =>
-        dbPen.insert(mouseMoveEntries).values({
-          ...entry,
-          connectionId,
-          organizationId,
-          perfTimestamp: String(entry.perfTimestamp),
-        }),
-      );
+      const mouseMessages = data.mouseMoveEvents.map((entry) => ({
+        ...entry,
+        connectionId,
+        organizationId,
+        perfTimestamp: String(entry.perfTimestamp),
+      }));
+      const mouse = dbPen
+        .insert(mouseMoveEntries)
+        .values(mouseMessages)
+        .catch((err) => {
+          console.error(
+            `RecordingAPI - Insert MouseEvent Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+          );
+          response.responseStatus = 500;
+        });
+
       // Resize
-      const resize = data.resizeEvents.map((entry) =>
-        dbPen.insert(resizeEventEntries).values({
-          ...entry,
-          connectionId,
-          organizationId,
-          perfTimestamp: String(entry.perfTimestamp),
-        }),
-      );
+      const resizeMessages = data.resizeEvents.map((entry) => ({
+        ...entry,
+        connectionId,
+        organizationId,
+        perfTimestamp: String(entry.perfTimestamp),
+      }));
+      const resize = dbPen
+        .insert(resizeEventEntries)
+        .values(resizeMessages)
+        .catch((err) => {
+          console.error(
+            `RecordingAPI - Insert ResizeEvent Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+          );
+          response.responseStatus = 500;
+        });
+
       // Scroll
-      const scroll = data.scrollEvents.map((entry) =>
-        dbPen.insert(scrollEventEntries).values({
-          ...entry,
-          connectionId,
-          organizationId,
-          scrollX: String(entry.scrollX),
-          scrollY: String(entry.scrollY),
-          perfTimestamp: String(entry.perfTimestamp),
-        }),
-      );
+      const scrollMessages = data.scrollEvents.map((entry) => ({
+        ...entry,
+        connectionId,
+        organizationId,
+        scrollX: String(entry.scrollX),
+        scrollY: String(entry.scrollY),
+        perfTimestamp: String(entry.perfTimestamp),
+      }));
+      const scroll = dbPen
+        .insert(scrollEventEntries)
+        .values(scrollMessages)
+        .catch((err) => {
+          console.error(
+            `RecordingAPI - Insert ScrollEvent Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+          );
+          response.responseStatus = 500;
+        });
+
       // TabVisibility
-      const tabVisibility = data.tabVisibilityEvents.map((entry) =>
-        dbPen.insert(tabVisibilityEntries).values({
-          ...entry,
-          connectionId,
-          organizationId,
-          perfTimestamp: String(entry.perfTimestamp),
-        }),
-      );
+      const tabVisibilityMessages = data.tabVisibilityEvents.map((entry) => ({
+        ...entry,
+        connectionId,
+        organizationId,
+        perfTimestamp: String(entry.perfTimestamp),
+      }));
+      const tabVisibility = dbPen
+        .insert(tabVisibilityEntries)
+        .values(tabVisibilityMessages)
+        .catch((err) => {
+          console.error(
+            `RecordingAPI - Insert TabVisibilityEvent Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+          );
+          response.responseStatus = 500;
+        });
+
       // Insert All
-      await Promise.all([
-        ...click,
-        ...key,
-        ...mouse,
-        ...resize,
-        ...scroll,
-        ...tabVisibility,
-      ]);
+      await Promise.all([click, key, mouse, resize, scroll, tabVisibility]);
+    } else {
+      console.warn(
+        `RecordingAPI - Illegal Organization Attempt. Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+      );
+      response.responseStatus = 403;
     }
   });
+  return response;
 }

@@ -11,12 +11,26 @@ export async function POST(
   const connectionId = params.connectionId;
   const origin = req.headers.get("referer");
 
+  let status = 201;
+  let statusText = "";
+
   if (origin) {
     const domain = getDomain(origin);
-    await authorizeAndWriteMessage(data, domain, apiKey, connectionId);
+    const { responseStatus, responseMessage } = await authorizeAndWriteMessage(
+      data,
+      domain,
+      apiKey,
+      connectionId,
+    );
+    status = responseStatus;
+    statusText = responseMessage;
+  } else {
+    console.warn(
+      `RecordingAPI - No Origin Error - APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+    );
+    status = 400;
+    statusText = "No Origin.";
   }
 
-  console.log(new Blob([JSON.stringify(data)]).size);
-
-  return new Response();
+  return new Response(undefined, { status, statusText });
 }

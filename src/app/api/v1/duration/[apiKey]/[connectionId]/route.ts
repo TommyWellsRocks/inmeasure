@@ -28,7 +28,8 @@ export async function POST(
     console.warn(
       `DurationAPI - No Origin Error - APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
     );
-    return new Response(undefined, { status: 400, statusText: "No Origin." });
+    status = 400;
+    statusText = "No Origin.";
   }
 
   return new Response(undefined, { status, statusText });
