@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import { getDashboardData } from "~/server/actions/dashboard";
 
 import Link from "next/link";
-import { TotalVisitorsTable } from "~/components/dashboard/TotalVisitorsTable";
 import { SourcesTable } from "~/components/dashboard/SourcesTable";
 import { TopPagesTable } from "~/components/dashboard/TopPagesTable";
-import { useRouter } from "next/navigation";
+import { TimestampSection } from "~/components/dashboard/TimestampsSection/TimestampSection";
 import { RefreshCcw } from "lucide-react";
 import {
   getConnectionTimestamps,
@@ -27,28 +26,25 @@ export default function Dashboard() {
   const [connectionTimestamps, setConnectionTimestamps] = useState<number[]>(
     [],
   );
-  const router = useRouter();
 
   useEffect(() => {
     if (org)
       getDashboardData(org.id).then((connections) => {
-        // ! This is error prone. Problems in all this function if only the connection is made, but no messages.
-
         setPageVisitors(getVisitedPages(connections));
         setSourceToVisitors(getSourceToVisitors(connections));
         setConnectionTimestamps(getConnectionTimestamps(connections));
       });
   }, [org, reloadFlag]);
 
-  if (!org) return router.push("/");
-
-  const orgDomain = "https://" + org.domain;
+  const orgDomain = "https://" + (org?.domain || "example.com");
 
   return (
-    <main className="flex flex-col gap-y-20 px-10">
+    <main className="flex flex-col gap-y-10 px-4 sm:gap-y-20 sm:px-10">
       <section className="flex items-center justify-between gap-x-2">
         <div className="flex flex-col gap-y-2">
-          <span className="text-xl font-semibold">{org.organizationName}</span>
+          <span className="text-xl font-semibold">
+            {org?.organizationName || "DUMMY DATA"}
+          </span>
           <Link
             href={orgDomain}
             target="_blank"
@@ -62,12 +58,9 @@ export default function Dashboard() {
         </button>
       </section>
 
-      <section>
-        {/* Give these totals, but also have a graph to literally show them by time with dropdown ranges */}
-        <TotalVisitorsTable connectionTimestamps={connectionTimestamps} />
-      </section>
+      <TimestampSection connectionTimestamps={connectionTimestamps} />
 
-      <section className="flex justify-between gap-10">
+      <section className="flex flex-col justify-between gap-10 text-sm min-[470px]:flex-row sm:text-base">
         <SourcesTable sourceToVisitors={sourceToVisitors} />
 
         <TopPagesTable pageVisitors={pageVisitors} />

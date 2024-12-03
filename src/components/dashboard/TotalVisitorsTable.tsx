@@ -92,17 +92,17 @@ export function TotalVisitorsTable({
   ];
 
   return (
-    <section className="flex w-full max-w-[320px] flex-col gap-y-2">
+    <div className="flex flex-col gap-y-2">
       <span className="text-xl font-medium">Total Users</span>
 
-      <div className="grid grid-cols-2 gap-x-6">
+      <div className="flex flex-col">
         {items.map((item) => (
-          <>
-            <span>{item.col1}</span>
-            <span>{item.col2}</span>
-          </>
+          <div className="flex justify-between gap-x-5">
+            <span className="w-32">{item.col1}</span>
+            <span className="max-w-[15ch]">{item.col2}</span>
+          </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
