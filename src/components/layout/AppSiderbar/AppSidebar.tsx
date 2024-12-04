@@ -1,4 +1,10 @@
-import { ArrowLeft, BookText, Home, LayoutDashboard } from "lucide-react";
+import {
+  ArrowLeft,
+  BookText,
+  Home,
+  LayoutDashboard,
+  Settings,
+} from "lucide-react";
 import Link from "next/link";
 import { OrganizationDropdown } from "./OrganizationDropdown";
 import { UserTab } from "./UserTab";
@@ -37,6 +43,12 @@ const items = [
       { title: "Need Help", url: "#help" },
     ],
   },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+    subsections: [{ title: "Organization", url: "#organization" }],
+  },
 ];
 
 function PlatformNav() {
@@ -72,7 +84,7 @@ function PlatformNav() {
 
 export function AppSidebar({ session }: { session: Session | null }) {
   return (
-    <section className="flex flex-row-reverse gap-x-2 fixed top-0 bottom-0 left-0 z-10">
+    <section className="fixed bottom-0 left-0 top-0 z-10 flex flex-row-reverse gap-x-2">
       <input type="checkbox" id="toggle" className="peer hidden bg-white" />
       <label
         htmlFor="toggle"
