@@ -1,6 +1,6 @@
 import { WhatSection } from "~/components/home/WhatSection";
 import { FeaturesSection } from "~/components/home/FeaturesSection";
-import { PricingSection } from "~/components/home/PricingSection";
+import { PricingSection } from "~/components/home/pricing/PricingSection";
 
 export default function HomePage() {
   return (
