@@ -151,7 +151,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
                   Max standard connection analytics for site visitors.
                 </FormDescription>
                 <FormDescription>
-                  ${getStandardAnalyticsPrice(field.value)}
+                  ${getStandardAnalyticsPrice(field.value).toFixed(2)}
                 </FormDescription>
               </div>
             </FormItem>
@@ -178,7 +178,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
                   Max session replays for site visitors.
                 </FormDescription>
                 <FormDescription>
-                  ${getPlaybackAnalyticsPrice(field.value)}
+                  ${getPlaybackAnalyticsPrice(field.value).toFixed(2)}
                 </FormDescription>
               </div>
             </FormItem>

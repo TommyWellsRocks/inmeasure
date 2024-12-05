@@ -16,7 +16,7 @@ export async function addOrganizationAndAssignUser(
 ) {
   const cleanDomain = getDomain(domain);
 
-  const seats = seatsLimit === "Unlimited" ? Infinity : Number(seatsLimit);
+  const seats = seatsLimit === "Unlimited" ? 0 : Number(seatsLimit);
 
   await db.transaction(async (tx) => {
     const newOrganization = await tx

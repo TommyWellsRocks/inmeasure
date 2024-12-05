@@ -3,7 +3,7 @@
 import { useOrganization } from "~/hooks/useOrganization";
 import { useSession } from "~/hooks/useSession";
 
-import { SettingsItem } from "./SettingsItem";
+import { SettingsItem } from "../SettingsItem";
 import { Trash2 } from "lucide-react";
 import { AddSeatUserButton } from "./AddSeatUserButton";
 
