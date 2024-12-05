@@ -51,7 +51,7 @@ export function Seats({
           <SelectItem value="Unlimited">Unlimited</SelectItem>
         </SelectContent>
       </Select>
-      <span className="w-24">Seat</span>
+      <span className="w-24" />
     </div>
   );
 }

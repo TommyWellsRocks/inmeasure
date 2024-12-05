@@ -37,7 +37,7 @@ export function StandardAnalytics({
           }));
         }}
       />
-      <span className="w-24">Visitors</span>
+      <span className="w-24 text-end">Visitors</span>
     </div>
   );
 }

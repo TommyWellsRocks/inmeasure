@@ -49,13 +49,13 @@ export function PricingSection() {
 
         <div className="flex justify-between gap-x-4">
           <span className="w-[200px]">History</span>
-          <span className="w-[12ch] px-3 text-xs">7</span>
-          <span className="w-24">Years</span>
+          <span className="w-[12ch] pl-3 text-xs">7</span>
+          <span className="w-24 text-end">Years</span>
         </div>
 
         <div className="flex justify-between">
           <span>Total</span>
-          <span>${totalPrice} / month</span>
+          <span className="text-end">${totalPrice} / month</span>
         </div>
 
         <div className="flex items-start justify-between text-zinc-500">
