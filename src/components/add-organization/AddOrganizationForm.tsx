@@ -29,6 +29,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import Link from "next/link";
+import {
+  getPlaybackAnalyticsPrice,
+  getSeatsPrice,
+  getStandardAnalyticsPrice,
+} from "~/utils/pricingFunctions";
+
+import type { SeatOption } from "~/server/types/InMeasure";
 
 const formSchema = z.object({
   organizationName: z
@@ -51,7 +58,7 @@ const formSchema = z.object({
     ),
   standardScriptLimit: z.coerce.number(),
   playbackScriptLimit: z.coerce.number(),
-  seatsLimit: z.coerce.number(),
+  seatsLimit: z.string(),
 });
 
 export function AddOrganizationForm({ userId }: { userId: string }) {
@@ -61,8 +68,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       organizationName: "",
       domain: "",
       standardScriptLimit: 10_000,
-      playbackScriptLimit: 1_000,
-      seatsLimit: 1,
+      playbackScriptLimit: 100,
+      seatsLimit: "1",
     },
   });
 
@@ -73,7 +80,7 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
       v.domain,
       v.standardScriptLimit,
       v.playbackScriptLimit,
-      v.seatsLimit,
+      v.seatsLimit as SeatOption,
     );
   }
 
@@ -92,8 +99,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
               <FormControl>
                 <Input
                   placeholder="InMeasure"
-                  {...field}
                   className="bg-zinc-900"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -109,8 +116,8 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
               <FormControl>
                 <Input
                   placeholder="https://www.inmeasure.com"
-                  {...field}
                   className="bg-zinc-900"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -128,18 +135,25 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
           name="standardScriptLimit"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Standard Connections</FormLabel>
+              <FormLabel>Standard Connections Limit</FormLabel>
               <FormControl>
                 <Input
                   inputMode="numeric"
                   type="number"
                   placeholder="10,000"
-                  {...field}
                   className="bg-zinc-900"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription>Logged site visitor cap.</FormDescription>
+              <div className="flex justify-between">
+                <FormDescription>
+                  Max standard connection analytics for site visitors.
+                </FormDescription>
+                <FormDescription>
+                  ${getStandardAnalyticsPrice(field.value)}
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />
@@ -148,20 +162,25 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
           name="playbackScriptLimit"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Session Replay Connections</FormLabel>
+              <FormLabel>Session Replay Connections Limit</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   inputMode="numeric"
                   placeholder="1,000"
-                  {...field}
                   className="bg-zinc-900"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription>
-                Logged site visitor session replay cap.
-              </FormDescription>
+              <div className="flex justify-between">
+                <FormDescription>
+                  Max session replays for site visitors.
+                </FormDescription>
+                <FormDescription>
+                  ${getPlaybackAnalyticsPrice(field.value)}
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />
@@ -182,20 +201,38 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
                   <SelectItem value="1">1</SelectItem>
                   <SelectItem value="5">5</SelectItem>
                   <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="0">Unlimited</SelectItem>
+                  <SelectItem value="Unlimited">Unlimited</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>
-                You can manage seats in your{" "}
-                <Link href="/settings#organization" className="underline">
-                  organization settings
-                </Link>
-                .
-              </FormDescription>
               <FormMessage />
+              <div className="flex justify-between">
+                <FormDescription>
+                  You can manage seats in your{" "}
+                  <Link href="/settings#organization" className="underline">
+                    organization settings
+                  </Link>
+                  .
+                </FormDescription>
+                <FormDescription>
+                  ${getSeatsPrice(field.value as SeatOption)}
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />
+        <div className="flex flex-col text-end text-zinc-500">
+          <span>
+            Monthly spend limit: $
+            {(
+              getStandardAnalyticsPrice(form.watch("standardScriptLimit")) +
+              getPlaybackAnalyticsPrice(form.watch("playbackScriptLimit")) +
+              getSeatsPrice(form.watch("seatsLimit") as SeatOption)
+            ).toFixed(2)}
+          </span>
+          <span className="text-xs">
+            This can be updated anytime in organization settings.
+          </span>
+        </div>
         <Button type="submit">Add Organization</Button>
       </form>
     </Form>

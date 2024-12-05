@@ -1,6 +1,6 @@
 import {
+  type SeatOption,
   playbackAnalyticsPrices,
-  SeatOption,
   seatPrices,
   standardAnalyticsPrices,
 } from "~/server/types/InMeasure";

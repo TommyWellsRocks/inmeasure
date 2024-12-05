@@ -6,13 +6,15 @@ import {
   isExistingDomain,
 } from "../db/queries/addOrganization";
 
+import type { SeatOption } from "../types/InMeasure";
+
 export async function addOrganization(
   userId: string,
   name: string,
   domain: string,
   standardScriptLimit: number,
   playbackScriptLimit: number,
-  seatsLimit: number,
+  seatsLimit: SeatOption,
 ) {
   await addOrganizationAndAssignUser(
     userId,

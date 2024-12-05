@@ -4,15 +4,19 @@ import { db } from "~/server/db";
 import { organizations, organizationUsers } from "../schema";
 import { getDomain } from "~/utils/getDomain";
 
+import type { SeatOption } from "~/server/types/InMeasure";
+
 export async function addOrganizationAndAssignUser(
   userId: string,
   name: string,
   domain: string,
   standardScriptLimit: number,
   playbackScriptLimit: number,
-  seatsLimit: number,
+  seatsLimit: SeatOption,
 ) {
   const cleanDomain = getDomain(domain);
+
+  const seats = seatsLimit === "Unlimited" ? Infinity : Number(seatsLimit);
 
   await db.transaction(async (tx) => {
     const newOrganization = await tx
@@ -22,7 +26,7 @@ export async function addOrganizationAndAssignUser(
         organizationName: name,
         standardScriptLimit,
         playbackScriptLimit,
-        seatsLimit,
+        seatsLimit: seats,
       })
       .returning({ id: organizations.id });
     const newOrgId = newOrganization[0]?.id;
