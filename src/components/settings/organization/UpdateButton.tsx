@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useOrganization } from "~/hooks/useOrganization";
 import { z } from "zod";
 
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
@@ -75,8 +74,6 @@ export function UpdateButton({
     seatsLimit: z.string(),
   });
 
-  const organization = useOrganization((state) => state.organization);
-  const org = organization?.organization!;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -93,7 +90,7 @@ export function UpdateButton({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     await updateOrg(
-      org.id,
+      currentOrg!.id,
       data.organizationName,
       data.domain,
       data.standardScriptLimit,

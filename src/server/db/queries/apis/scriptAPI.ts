@@ -41,23 +41,24 @@ export async function authorizeAndCreateConnection(
       });
 
     if (org) {
+      let connectionId = "";
       // Create the connection
-      const newConnectionEntries = await tx
-        .insert(connectionEntries)
-        .values({
-          organizationId: org.id,
-        })
-        .returning({ connectionId: connectionEntries.connectionId })
-        .catch((err) => {
-          console.error(
-            `ScriptAPI - Insert Connection Entry Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}.`,
-          );
-          response.responseStatus = 500;
-        });
 
-      const connectionEntry = newConnectionEntries?.at(0)!;
+      try {
+        const [newConnectionEntry] = await tx
+          .insert(connectionEntries)
+          .values({
+            organizationId: org.id,
+          })
+          .returning({ connectionId: connectionEntries.connectionId });
+        connectionId = newConnectionEntry!.connectionId;
+      } catch (err: any) {
+        console.error(
+          `ScriptAPI - Insert Connection Entry Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}.`,
+        );
+        response.responseStatus = 500;
+      }
       const orgTotals = org.totals[0] ? org.totals[0] : null;
-      const connectionId = connectionEntry.connectionId;
 
       let scriptType: ReturnScript | null = null;
       const monthlyStandardScriptSent = orgTotals?.standardScriptsSent || 0;

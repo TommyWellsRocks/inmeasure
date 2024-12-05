@@ -32,6 +32,7 @@ const config = {
     "@typescript-eslint/no-redundant-type-constituents": "warn",
     "@typescript-eslint/consistent-indexed-object-style": "warn",
     "@typescript-eslint/no-unsafe-member-access": "warn",
+    "@typescript-eslint/no-unused-expressions": "warn",
     "react-hooks/rules-of-hooks": "warn",
     "@typescript-eslint/no-unused-vars": [
       "warn",

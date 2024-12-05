@@ -96,8 +96,8 @@ export function TotalVisitorsTable({
       <span className="text-xl font-medium">Total Users</span>
 
       <div className="flex flex-col">
-        {items.map((item) => (
-          <div className="flex justify-between gap-x-5">
+        {items.map((item, index) => (
+          <div className="flex justify-between gap-x-5" key={index}>
             <span className="w-32">{item.col1}</span>
             <span className="max-w-[15ch]">{item.col2}</span>
           </div>
