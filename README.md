@@ -16,21 +16,22 @@ TODOS:
 - Payment required
 - Take payment recurring
 
-Pricing Info (PostHog):
-// Web Analytics (No Personal Identity info)
-// -10,000 Visitors ($ FREE / Visitor)
-// -20,000 Visitors ($.00500 / Visitor)
-// -150,000   Visitors ($.00343 / Visitor)
-// -500,000 Visitors ($.00295 / Visitor)
-// -1,000,000 Visitors ($.00218 / Visitor)
-// -2,500,000 Visitors ($.0015  / Visitor)
-// +          Visitors ($.0009 / Visitor)
+const items = [
+  "Get a comprehensive overview of your website's performance with our intuitive dashboard. Track key metrics such as page views, unique visitors, bounce rates, and average session duration in real-time.",
 
-// Product Analytics (email) (filter by specific user)
-// -10,000 Visitors ($ FREE / Visitor)
-// -20,000 Visitors ($.02480 / Visitor)
-// -150,000   Visitors ($.00343 / Visitor)
-// -500,000 Visitors ($.00295 / Visitor)
-// -1,000,000 Visitors ($.00218 / Visitor)
-// -2,500,000 Visitors ($.0015  / Visitor)
-// +          Visitors ($.0009 / Visitor)
+  "Understand how visitors interact with your site. Track user journeys, analyze click patterns, and identify popular content to optimize your user experience and increase engagement.",
+
+  "Monitor your website's activity as it happens. Spot trends, identify issues, and make quick decisions based on current user behavior.",
+
+  "Improve your website's speed and efficiency. Our performance metrics help you identify bottlenecks, optimize load times, and enhance overall site performance for better user experience and SEO rankings.",
+
+  "Monitor conversion goals to measure the effectiveness of your marketing efforts. Track form submissions, product purchases, or any custom events to understand your conversion funnel and improve ROI.",
+
+  "Monitor performance, conversions, behavior, and other key indicators by device type. Ensuring an enjoyable and optimal experience for every user no matter the device.",
+
+  "Monitor geographic information to understand where and who your audience is. Monitor performance, conversions, behavior, and other key indicators across the globe.",
+
+  "Gather tailored information to meet your specific needs. Our flexible reporting tools allow you to track all the KPIs your organization want.",
+
+  "Integrate analytics data into your existing workflows and tools with easy API access.",
+];

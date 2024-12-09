@@ -18,7 +18,8 @@ const items = [
     icon: Home,
     subsections: [
       { title: "Installation", url: "#installation" },
-      { title: "Features", url: "#features" },
+      { title: "Platform", url: "#platform" },
+      { title: "Analytics", url: "#analytics" },
       { title: "Pricing", url: "#pricing" },
     ],
   },
