@@ -4,7 +4,7 @@ export function WhatSection() {
   return (
     <section className="flex flex-col items-center gap-y-10 pt-10 text-center">
       <div className="flex flex-col items-center gap-y-4">
-        <span className="text-lg text-zinc-400">Simple. In-depth. Private.</span>
+        <span className="text-lg text-zinc-400">Simple. In-depth. Secure.</span>
         <span className="text-5xl font-semibold lg:text-6xl xl:text-7xl">
           Website Analytics
         </span>
@@ -16,10 +16,14 @@ export function WhatSection() {
           conversion tracking to help make data-driver decisions.
         </span>
         <span>
-          InMeasure is simple, with minimal installation, with maximum results.
+          Reason of existence:{" "}
+          <span className="text-zinc-300">
+            Be simple to deal with, offer useful and accurate data, and protect
+            user privacy at all cost.
+          </span>
         </span>
         <span>
-          InMeasure is the ____{" "}
+          InMeasure is the{" "}
           <span className="text-zinc-300">
             web analytics tool for every level of scale.
           </span>
