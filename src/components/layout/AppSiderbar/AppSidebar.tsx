@@ -3,6 +3,7 @@ import {
   BookText,
   Home,
   LayoutDashboard,
+  Scale,
   Settings,
 } from "lucide-react";
 import Link from "next/link";
@@ -17,11 +18,16 @@ const items = [
     url: "/",
     icon: Home,
     subsections: [
-      { title: "Installation", url: "#installation" },
+      { title: "What's InMeasure", url: "#what" },
       { title: "Platform", url: "#platform" },
       { title: "Analytics", url: "#analytics" },
-      { title: "Pricing", url: "#pricing" },
     ],
+  },
+  {
+    title: "Pricing",
+    url: "/pricing",
+    icon: Scale,
+    subsections: [{ title: "Calculate Pricing", url: "#calculate" }],
   },
   {
     title: "Dashboard",

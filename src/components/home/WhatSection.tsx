@@ -2,7 +2,10 @@ import Link from "next/link";
 
 export function WhatSection() {
   return (
-    <section className="flex flex-col items-center gap-y-10 pt-10 text-center">
+    <section
+      className="flex flex-col items-center gap-y-10 pt-10 text-center"
+      id="what"
+    >
       <div className="flex flex-col items-center gap-y-4">
         <span className="text-lg text-zinc-400">Simple. In-depth. Secure.</span>
         <span className="text-5xl font-semibold lg:text-6xl xl:text-7xl">
@@ -30,7 +33,7 @@ export function WhatSection() {
         </span>
       </div>
 
-      <Link href="#pricing">
+      <Link href="/pricing">
         <button className="rounded-md bg-zinc-200 px-6 py-2 text-sm text-zinc-950 hover:bg-zinc-300">
           Get Started
         </button>
