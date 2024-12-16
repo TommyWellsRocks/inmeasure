@@ -18,6 +18,7 @@ import {
 
 export default function Dashboard() {
   const org = useOrganization((state) => state.organization?.organization);
+  const [errMessage, setErrMessage] = useState("");
   const [pageVisitors, setPageVisitors] = useState<Record<string, number>>({});
   const [sourceToVisitors, setSourceToVisitors] = useState<
     Record<string, number>
@@ -29,10 +30,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (org)
-      getDashboardData(org.id).then((connections) => {
-        setPageVisitors(getVisitedPages(connections));
-        setSourceToVisitors(getSourceToVisitors(connections));
-        setConnectionTimestamps(getConnectionTimestamps(connections));
+      getDashboardData(org.id).then(({ value: connections, err }) => {
+        if (err) {
+          setErrMessage(err);
+        } else {
+          setPageVisitors(getVisitedPages(connections!));
+          setSourceToVisitors(getSourceToVisitors(connections!));
+          setConnectionTimestamps(getConnectionTimestamps(connections!));
+        }
       });
   }, [org, reloadFlag]);
 
@@ -57,6 +62,12 @@ export default function Dashboard() {
           <RefreshCcw />
         </button>
       </section>
+
+      {errMessage ? (
+        <span className="rounded-md bg-zinc-700 px-2 py-1 font-medium text-red-500">
+          {errMessage}
+        </span>
+      ) : null}
 
       <TimestampSection connectionTimestamps={connectionTimestamps} />
 

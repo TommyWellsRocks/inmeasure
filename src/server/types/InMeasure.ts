@@ -6,9 +6,9 @@ import { SeatOption } from "~/lib/schemas/types";
 export type Organizations = Awaited<ReturnType<typeof getUserOrganizations>>;
 export type Organization = Organizations[0];
 
-export type DashboardConnections = Awaited<
+export type DashboardConnections = NonNullable<Awaited<
   ReturnType<typeof getTheDashboardData>
->;
+>["value"]>;
 
 export type SeatOption = z.infer<typeof SeatOption>;
 
