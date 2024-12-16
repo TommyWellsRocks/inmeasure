@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
-import { index, varchar, bigint, primaryKey } from "drizzle-orm/pg-core";
+import { index, varchar, bigint } from "drizzle-orm/pg-core";
 import { organizations, connectionEntries } from "~/server/db/schema";
 
 export const durationMessages = createTable(
@@ -10,7 +10,8 @@ export const durationMessages = createTable(
       .references(() => connectionEntries.connectionId, {
         onDelete: "cascade",
       })
-      .notNull(),
+      .notNull()
+      .primaryKey(),
     organizationId: varchar("organization_id")
       .references(() => organizations.id, {
         onDelete: "cascade",
@@ -22,7 +23,6 @@ export const durationMessages = createTable(
     endTimestamp: bigint("end_timestamp", { mode: "number" }),
   },
   (table) => ({
-    pk: primaryKey({ columns: [table.connectionId, table.startTimestamp] }),
     organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),

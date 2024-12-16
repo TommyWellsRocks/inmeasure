@@ -10,8 +10,8 @@ export const standardMessages = createTable(
       .references(() => connectionEntries.connectionId, {
         onDelete: "cascade",
       })
-      .primaryKey()
-      .notNull(),
+      .notNull()
+      .primaryKey(),
     organizationId: varchar("organization_id")
       .references(() => organizations.id, {
         onDelete: "cascade",

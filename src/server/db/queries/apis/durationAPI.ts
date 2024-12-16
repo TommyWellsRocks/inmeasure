@@ -50,11 +50,14 @@ export async function authorizeAndWriteMessage(
           perfTimestamp: String(entry.perfTimestamp),
         }));
 
-      const pageMessages = dbPen
-        .insert(pageURLEntries)
-        .values(pageMessageValues);
-
-      await Promise.all([durationMessage, pageMessages]);
+      if (pageMessageValues.length >= 1) {
+        const pageMessages = dbPen
+          .insert(pageURLEntries)
+          .values(pageMessageValues);
+        await Promise.all([durationMessage, pageMessages]);
+      } else {
+        await Promise.all([durationMessage]);
+      }
     });
   } catch (err: any) {
     console.error(err.message);

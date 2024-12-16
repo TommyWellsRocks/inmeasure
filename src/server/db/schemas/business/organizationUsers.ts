@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
-import { index, primaryKey, varchar } from "drizzle-orm/pg-core";
+import { index, varchar } from "drizzle-orm/pg-core";
 import { users, organizations } from "~/server/db/schema";
 
 export const organizationUsers = createTable(
@@ -17,7 +17,6 @@ export const organizationUsers = createTable(
     }),
   },
   (table) => ({
-    pk: primaryKey({ columns: [table.organizationId, table.userId] }),
     organizationIndex: index().on(table.organizationId),
     userIndex: index().on(table.userId),
   }),
