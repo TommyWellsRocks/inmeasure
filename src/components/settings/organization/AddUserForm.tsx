@@ -50,7 +50,9 @@ export function AddUserForm({
       )
       .refine(
         async (email) => {
-          const activeUser = await isExistingEmail(email);
+          const { value: activeUser, err } = await isExistingEmail(email);
+          if (err) return false;
+
           if (activeUser) {
             userId = activeUser.id;
             userName = activeUser.name || "New User";

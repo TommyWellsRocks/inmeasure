@@ -70,7 +70,8 @@ export const useOrganization = create<organizationState>((set, get) => ({
 
     // Actual Update
     try {
-      await addUserToOrganization(userId, organizationId);
+      const { err } = await addUserToOrganization(userId, organizationId);
+      if (err) throw err;
     } catch (error) {
       // Else Fallback Update
       console.error(error);
@@ -110,7 +111,8 @@ export const useOrganization = create<organizationState>((set, get) => ({
 
     // Actual Update
     try {
-      await removeUserFromOrganization(userId, organizationId);
+      const { err } = await removeUserFromOrganization(userId, organizationId);
+      if (err) throw err;
     } catch (error) {
       // Else Fallback Update
       console.error(error);
