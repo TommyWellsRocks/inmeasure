@@ -34,10 +34,7 @@ export async function authorizeAndWriteMessage(
           startTimestamp: data.timestamp,
         })
         .onConflictDoUpdate({
-          target: [
-            durationMessages.connectionId,
-            durationMessages.organizationId,
-          ],
+          target: durationMessages.connectionId,
           set: { endTimestamp: data.timestamp },
         });
 
