@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { createTable } from "../helper";
-import { index, varchar, bigint } from "drizzle-orm/pg-core";
+import { index, varchar, bigint, primaryKey } from "drizzle-orm/pg-core";
 import {
   organizations,
   standardMessages,
@@ -19,7 +19,6 @@ export const connectionEntries = createTable(
   {
     connectionId: varchar("connection_id")
       .$defaultFn(() => crypto.randomUUID())
-      .primaryKey()
       .notNull(),
     organizationId: varchar("organization_id")
       .references(() => organizations.id, {
@@ -31,6 +30,7 @@ export const connectionEntries = createTable(
       .notNull(),
   },
   (table) => ({
+    primaryKey: primaryKey({ columns: [table.connectionId, table.timestamp] }),
     organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),
