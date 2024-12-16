@@ -14,14 +14,20 @@ export async function updateOrganization(
   playbackScriptLimit: number,
   seatsLimit: SeatOption,
 ) {
-  await db
-    .update(organizations)
-    .set({
-      organizationName,
-      domain,
-      standardScriptLimit,
-      playbackScriptLimit,
-      seatsLimit: seatsLimit === "Unlimited" ? 0 : Number(seatsLimit),
-    })
-    .where(eq(organizations.id, organizationId));
+  try {
+    await db
+      .update(organizations)
+      .set({
+        organizationName,
+        domain,
+        standardScriptLimit,
+        playbackScriptLimit,
+        seatsLimit: seatsLimit === "Unlimited" ? 0 : Number(seatsLimit),
+      })
+      .where(eq(organizations.id, organizationId));
+  } catch (err: any) {
+    console.error(err.message);
+    return { err: "Error updating organization in DB." };
+  }
+  return { err: null };
 }

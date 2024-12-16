@@ -35,13 +35,16 @@ import {
 } from "~/utils/pricingFunctions";
 
 import type { Organization, SeatOption } from "~/server/types/InMeasure";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function UpdateButton({
   currentOrg,
 }: {
   currentOrg: Organization["organization"];
 }) {
-  if (!currentOrg) return;
+  const [errMessage, setErrMessage] = useState("");
+  const router = useRouter();
   const formSchema = z.object({
     organizationName: z
       .string()
@@ -57,7 +60,7 @@ export function UpdateButton({
           const newUrl = getDomain(url);
           const { value: isTaken, err } = await isOrganizationDomain(newUrl);
           if (err) return false;
-          if (isTaken && newUrl === currentOrg.domain) {
+          if (isTaken && newUrl === currentOrg!.domain) {
             return true;
           } else if (isTaken) {
             return false;
@@ -78,19 +81,19 @@ export function UpdateButton({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      organizationName: currentOrg.organizationName,
-      domain: "https://" + currentOrg.domain,
-      standardScriptLimit: currentOrg.standardScriptLimit,
-      playbackScriptLimit: currentOrg.playbackScriptLimit,
+      organizationName: currentOrg!.organizationName,
+      domain: "https://" + currentOrg!.domain,
+      standardScriptLimit: currentOrg!.standardScriptLimit,
+      playbackScriptLimit: currentOrg!.playbackScriptLimit,
       seatsLimit:
-        currentOrg.seatsLimit === 0
+        currentOrg!.seatsLimit === 0
           ? "Unlimited"
-          : String(currentOrg.seatsLimit),
+          : String(currentOrg!.seatsLimit),
     },
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    await updateOrg(
+    const { err } = await updateOrg(
       currentOrg!.id,
       data.organizationName,
       data.domain,
@@ -98,6 +101,12 @@ export function UpdateButton({
       data.playbackScriptLimit,
       data.seatsLimit as SeatOption,
     );
+    if (err) {
+      setErrMessage(err);
+    } else {
+      form.reset();
+      router.refresh();
+    }
   }
 
   return (
