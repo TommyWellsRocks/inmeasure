@@ -55,7 +55,8 @@ export function UpdateButton({
       .refine(
         async (url) => {
           const newUrl = getDomain(url);
-          const isTaken = await isOrganizationDomain(newUrl);
+          const { value: isTaken, err } = await isOrganizationDomain(newUrl);
+          if (err) return false;
           if (isTaken && newUrl === currentOrg.domain) {
             return true;
           } else if (isTaken) {

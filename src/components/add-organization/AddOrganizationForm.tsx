@@ -36,6 +36,8 @@ import {
 } from "~/utils/pricingFunctions";
 
 import type { SeatOption } from "~/server/types/InMeasure";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const formSchema = z.object({
   organizationName: z
@@ -49,9 +51,10 @@ const formSchema = z.object({
     .url()
     .refine(
       async (url) => {
-        if (await isOrganizationDomain(getDomain(url))) {
-          return false;
-        }
+        const { value: isOrgDomain, err } = await isOrganizationDomain(
+          getDomain(url),
+        );
+        if (isOrgDomain) return false;
         return true;
       },
       { message: "Organization already exists. Join the organization." },
@@ -61,7 +64,9 @@ const formSchema = z.object({
   seatsLimit: z.string(),
 });
 
-export function AddOrganizationForm({ userId }: { userId: string }) {
+export function AddOrganizationForm() {
+  const [errMessage, setErrMessage] = useState("");
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,15 +78,20 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
     },
   });
 
-  function onSubmit(v: z.infer<typeof formSchema>) {
-    addOrganization(
-      userId,
+  async function onSubmit(v: z.infer<typeof formSchema>) {
+    const { err } = await addOrganization(
       v.organizationName,
       v.domain,
       v.standardScriptLimit,
       v.playbackScriptLimit,
       v.seatsLimit as SeatOption,
     );
+    if (err) {
+      setErrMessage(err);
+    } else {
+      form.reset();
+      router.push("/");
+    }
   }
 
   return (
@@ -234,6 +244,11 @@ export function AddOrganizationForm({ userId }: { userId: string }) {
           </span>
         </div>
         <Button type="submit">Add Organization</Button>
+        {errMessage ? (
+          <span className="rounded-md bg-zinc-700 px-2 py-1 font-medium text-red-500">
+            {errMessage}
+          </span>
+        ) : null}
       </form>
     </Form>
   );

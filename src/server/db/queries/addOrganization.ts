@@ -18,29 +18,40 @@ export async function addOrganizationAndAssignUser(
 
   const seats = seatsLimit === "Unlimited" ? 0 : Number(seatsLimit);
 
-  await db.transaction(async (tx) => {
-    const newOrganization = await tx
-      .insert(organizations)
-      .values({
-        domain: cleanDomain,
-        organizationName: name,
-        standardScriptLimit,
-        playbackScriptLimit,
-        seatsLimit: seats,
-      })
-      .returning({ id: organizations.id });
-    const newOrgId = newOrganization[0]?.id;
-    if (newOrgId)
-      await tx
-        .insert(organizationUsers)
-        .values({ userId, organizationId: newOrgId });
-  });
+  try {
+    await db.transaction(async (tx) => {
+      const newOrganization = await tx
+        .insert(organizations)
+        .values({
+          domain: cleanDomain,
+          organizationName: name,
+          standardScriptLimit,
+          playbackScriptLimit,
+          seatsLimit: seats,
+        })
+        .returning({ id: organizations.id });
+      const newOrgId = newOrganization[0]?.id;
+      if (newOrgId)
+        await tx
+          .insert(organizationUsers)
+          .values({ userId, organizationId: newOrgId });
+    });
+  } catch (err: any) {
+    console.error(err.message);
+    return { err: "Error adding organization to DB. " };
+  }
+  return { err: null };
 }
 
 export async function isExistingDomain(domain: string) {
-  const existingOrganization = await db.query.organizations.findFirst({
-    columns: { id: true },
-    where: (model, { eq }) => eq(model.domain, domain),
-  });
-  return existingOrganization ? true : false;
+  try {
+    const existingOrganization = await db.query.organizations.findFirst({
+      columns: { id: true },
+      where: (model, { eq }) => eq(model.domain, domain),
+    });
+    return { value: existingOrganization ? true : false, err: null };
+  } catch (err: any) {
+    console.error(err.message);
+    return { value: null, err: "Error validating domain in DB." };
+  }
 }

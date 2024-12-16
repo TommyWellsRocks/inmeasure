@@ -1,5 +1,7 @@
+import { z } from "zod";
 import { getTheDashboardData } from "../db/queries/dashboard";
 import { getUserOrganizations } from "../db/queries/layout";
+import { SeatOption } from "~/lib/schemas/types";
 
 export type Organizations = Awaited<ReturnType<typeof getUserOrganizations>>;
 export type Organization = Organizations[0];
@@ -8,7 +10,7 @@ export type DashboardConnections = Awaited<
   ReturnType<typeof getTheDashboardData>
 >;
 
-export type SeatOption = "1" | "5" | "10" | "Unlimited";
+export type SeatOption = z.infer<typeof SeatOption>;
 
 export const standardAnalyticsPrices = [
   { limit: 10_000, pricePer: 0.006 },
