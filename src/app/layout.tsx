@@ -31,10 +31,16 @@ export default async function RootLayout({
   const userId = session?.user?.id;
   let organizations: Organizations | null = null;
   if (userId) {
-    organizations = await getUserOrganizations(userId);
+    const { value, err } = await getUserOrganizations(userId);
+    if (err) console.error(err);
+    organizations = value;
   }
 
-  const cpyScript = replaceOnScript("a8fab9b1-0bfb-4a61-ad31-6f3a54e15804", "", copyScript);
+  const cpyScript = replaceOnScript(
+    "a8fab9b1-0bfb-4a61-ad31-6f3a54e15804",
+    "",
+    copyScript,
+  );
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>

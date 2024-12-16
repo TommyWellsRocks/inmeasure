@@ -3,7 +3,7 @@ import { getTheDashboardData } from "../db/queries/dashboard";
 import { getUserOrganizations } from "../db/queries/layout";
 import { SeatOption } from "~/lib/schemas/types";
 
-export type Organizations = Awaited<ReturnType<typeof getUserOrganizations>>;
+export type Organizations = NonNullable<Awaited<ReturnType<typeof getUserOrganizations>>["value"]>;
 export type Organization = Organizations[0];
 
 export type DashboardConnections = NonNullable<Awaited<
