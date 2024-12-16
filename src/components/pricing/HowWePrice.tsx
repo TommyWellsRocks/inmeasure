@@ -16,7 +16,7 @@ export function HowWePrice() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="rounded-sm bg-zinc-800 px-2 py-1 text-end text-xs shadow shadow-md shadow-zinc-300 hover:text-zinc-400">
+        <button className="rounded-sm bg-zinc-800 px-2 py-1 text-end text-xs shadow-md shadow-zinc-300 hover:text-zinc-400">
           How we calculate this
         </button>
       </PopoverTrigger>

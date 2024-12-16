@@ -12,7 +12,7 @@ export default async function AddOrganization() {
 
   return (
     <main className="mx-auto flex w-full max-w-[600px] flex-col gap-y-20">
-      <AddOrganizationForm userId={userId} />
+      <AddOrganizationForm  />
       <div className="flex flex-col items-center gap-y-2 rounded-md bg-zinc-800 px-4 py-2">
         <span className="text-lg font-semibold">
           Is your organization already using InMeasure?
