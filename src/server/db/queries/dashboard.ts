@@ -11,10 +11,8 @@ export async function getTheDashboardData(organizationId: string) {
         with: {
           standardMessage: { columns: { source: true } },
           pageURLMessages: { columns: { pageURL: true } },
-          durationMessages: {
-            columns: { timestamp: true },
-            orderBy: (model, { desc }) => desc(model.timestamp),
-            limit: 1,
+          durationMessage: {
+            columns: { startTimestamp: true, endTimestamp: true },
           },
         },
       }),

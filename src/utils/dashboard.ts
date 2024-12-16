@@ -37,6 +37,9 @@ export function getVisitedPages(connections: DashboardConnections) {
 
 export function getConnectionTimestamps(connections: DashboardConnections) {
   return connections.map(
-    (con) => con.durationMessages[0]?.timestamp || con.timestamp,
+    (con) =>
+      con.durationMessage?.endTimestamp ||
+      con.durationMessage?.startTimestamp ||
+      con.timestamp,
   );
 }

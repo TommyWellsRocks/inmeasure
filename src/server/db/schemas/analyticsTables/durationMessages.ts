@@ -16,12 +16,13 @@ export const durationMessages = createTable(
         onDelete: "cascade",
       })
       .notNull(),
-    timestamp: bigint("timestamp", { mode: "number" })
+    startTimestamp: bigint("start_timestamp", { mode: "number" })
       .$defaultFn(() => Date.now())
       .notNull(),
+    endTimestamp: bigint("end_timestamp", { mode: "number" }),
   },
   (table) => ({
-    pk: primaryKey({ columns: [table.connectionId, table.timestamp] }),
+    pk: primaryKey({ columns: [table.connectionId, table.startTimestamp] }),
     organizationIndex: index().on(table.organizationId),
     connectionIndex: index().on(table.connectionId),
   }),

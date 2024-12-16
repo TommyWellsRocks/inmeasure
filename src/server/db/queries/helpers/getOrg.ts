@@ -17,23 +17,31 @@ export async function getOrg(
   apiKey: string,
   connectionId: string,
 ) {
-  return await dbPen.query.organizations.findFirst({
-    columns: { id: true },
-    where: (model, { and, eq, exists }) =>
-      and(
-        eq(model.domain, domain),
-        eq(model.apiKey, apiKey),
-        exists(
-          dbPen
-            .select({ connectionId: connectionEntries.connectionId })
-            .from(connectionEntries)
-            .where(
-              and(
-                eq(connectionEntries.organizationId, model.id),
-                eq(connectionEntries.connectionId, connectionId),
-              ),
+  try {
+    return {
+      value: await dbPen.query.organizations.findFirst({
+        columns: { id: true },
+        where: (model, { and, eq, exists }) =>
+          and(
+            eq(model.domain, domain),
+            eq(model.apiKey, apiKey),
+            exists(
+              dbPen
+                .select({ connectionId: connectionEntries.connectionId })
+                .from(connectionEntries)
+                .where(
+                  and(
+                    eq(connectionEntries.organizationId, model.id),
+                    eq(connectionEntries.connectionId, connectionId),
+                  ),
+                ),
             ),
-        ),
-      ),
-  });
+          ),
+      }),
+      err: null,
+    };
+  } catch (err: any) {
+    console.error(err.message);
+    return { value: null, err: "Error authorizing organization in DB." };
+  }
 }

@@ -13,44 +13,34 @@ export async function authorizeAndWriteMessage(
   connectionId: string,
 ) {
   const response = { responseStatus: 201, responseMessage: "" };
-  await db.transaction(async (dbPen) => {
-    // Get the organizationId where isOrganization and isConnectionId
-    const organization = await getOrg(
-      dbPen,
-      domain,
-      apiKey,
-      connectionId,
-    ).catch((err) => {
-      console.error(
-        `StandardAPI - getOrg Authorization Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
-      );
-      response.responseStatus = 500;
-    });
 
-    const organizationId = organization?.id;
-    if (organizationId) {
-      await dbPen
-        .insert(standardMessages)
-        .values({
-          ...data,
-          connectionId,
-          organizationId,
-          timeToPageLoad: String(data.timeToPageLoad),
-          timeToFirstInteraction: String(data.timeToFirstInteraction),
-          perfTimestamp: String(data.perfTimestamp),
-        })
-        .catch((err) => {
-          console.error(
-            `StandardAPI - Insert Standard Message Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
-          );
-          response.responseStatus = 500;
-        });
-    } else {
-      console.warn(
-        `StandardAPI - Illegal Organization Attempt. Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
+  try {
+    await db.transaction(async (dbPen) => {
+      const { value: organization, err } = await getOrg(
+        dbPen,
+        domain,
+        apiKey,
+        connectionId,
       );
-      response.responseStatus = 403;
-    }
-  });
+      if (err || !organization?.id)
+        throw new Error(err ? err : "No organizationId error.");
+      const organizationId = organization.id;
+
+      const standardMessageValues = {
+        ...data,
+        connectionId,
+        organizationId,
+        timeToPageLoad: String(data.timeToPageLoad),
+        timeToFirstInteraction: String(data.timeToFirstInteraction),
+        perfTimestamp: String(data.perfTimestamp),
+      };
+      await dbPen.insert(standardMessages).values(standardMessageValues);
+    });
+  } catch (err: any) {
+    console.error(err.message);
+    response.responseStatus = 500;
+    return response;
+  }
+
   return response;
 }

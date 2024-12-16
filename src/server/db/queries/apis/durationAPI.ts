@@ -13,31 +13,32 @@ export async function authorizeAndWriteMessage(
   connectionId: string,
 ) {
   const response = { responseStatus: 201, responseMessage: "" };
-  await db.transaction(async (dbPen) => {
-    // Get the organizationId where isOrganization and isConnectionId
-    const organization = await getOrg(
-      dbPen,
-      domain,
-      apiKey,
-      connectionId,
-    ).catch((err) => {
-      console.error(
-        `DurationAPI - getOrg Authorization Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
-      );
-      response.responseStatus = 500;
-    });
 
-    const organizationId = organization?.id;
-    if (organizationId) {
-      // Insert Duration Message
+  try {
+    await db.transaction(async (dbPen) => {
+      const { value: organization, err } = await getOrg(
+        dbPen,
+        domain,
+        apiKey,
+        connectionId,
+      );
+      if (err || !organization?.id)
+        throw new Error(err ? err : "No organizationId error.");
+      const organizationId = organization.id;
+
       const durationMessage = dbPen
         .insert(durationMessages)
-        .values({ connectionId, organizationId, timestamp: data.timestamp })
-        .catch((err) => {
-          console.error(
-            `DurationAPI - Insert Duration Message Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
-          );
-          response.responseStatus = 500;
+        .values({
+          connectionId,
+          organizationId,
+          startTimestamp: data.timestamp,
+        })
+        .onConflictDoUpdate({
+          target: [
+            durationMessages.connectionId,
+            durationMessages.organizationId,
+          ],
+          set: { endTimestamp: data.timestamp },
         });
 
       const pageMessageValues = data.pageURL
@@ -49,24 +50,17 @@ export async function authorizeAndWriteMessage(
           perfTimestamp: String(entry.perfTimestamp),
         }));
 
-      // Insert PageURL Messages
       const pageMessages = dbPen
         .insert(pageURLEntries)
-        .values(pageMessageValues)
-        .catch((err) => {
-          console.error(
-            `DurationAPI - Insert PageURL Messages Error: ${err} - Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
-          );
-          response.responseStatus = 500;
-        });
+        .values(pageMessageValues);
 
       await Promise.all([durationMessage, pageMessages]);
-    } else {
-      console.warn(
-        `DurationAPI - Illegal Organization Attempt. Domain: ${domain}, APIKEY: ${apiKey}, ConnectionId: ${connectionId}.`,
-      );
-      response.responseStatus = 403;
-    }
-  });
+    });
+  } catch (err: any) {
+    console.error(err.message);
+    response.responseStatus = 500;
+    return response;
+  }
+
   return response;
 }

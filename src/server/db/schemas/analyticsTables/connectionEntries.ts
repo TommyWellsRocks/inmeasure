@@ -48,7 +48,10 @@ export const connectionRelations = relations(
       references: [standardMessages.connectionId],
     }),
     pageURLMessages: many(pageURLEntries),
-    durationMessages: many(durationMessages),
+    durationMessage: one(durationMessages, {
+      fields: [connectionEntries.connectionId],
+      references: [durationMessages.connectionId],
+    }),
     clickEventEntries: many(clickEventEntries),
     keyEventEntries: many(keyEventEntries),
     mouseMoveEntries: many(mouseMoveEntries),
